@@ -22,7 +22,7 @@ from ai_identicon.genome import (
 )
 from ai_identicon import geometry
 
-SEEDS = ["bmev5p5akc", "8f2p7ke747", "locksmith-demo-agent", "agent-alpha"]
+SEEDS = ["bmev5p5akc", "8f2p7ke747", "default-agent", "agent-alpha"]
 
 
 # --------------------------------------------------------------- determinism

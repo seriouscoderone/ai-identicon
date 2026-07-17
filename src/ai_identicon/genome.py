@@ -105,7 +105,7 @@ class Genome:
     see `to_dict`; the rest is reproducible from those.
     """
 
-    seed: str = "locksmith-demo-agent"
+    seed: str = "ai-identicon"
     algo_version: int = ALGO_VERSION
     mesh_seed: int = 7
     faces: int = 40           # TOTAL face budget, partitioned across shards
