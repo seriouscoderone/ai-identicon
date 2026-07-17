@@ -82,8 +82,6 @@ class Demo(QWidget):
         self.mic_cb = QCheckBox("mic")
         self.mic_cb.setEnabled(HAVE_AUDIO)
         self.mic_cb.toggled.connect(self._toggle_mic)
-        self.glass_cb = QCheckBox("glassy")
-        self.glass_cb.toggled.connect(lambda on: self.orb.set_transparent(on))
         self._view_btns = {}
         for mode, label in (("white", "view ⬜"), ("black", "view ⬛"), ("color", "view 🎨")):
             b = QPushButton(label)
@@ -92,7 +90,7 @@ class Demo(QWidget):
             self._view_btns[mode] = b
         save = QPushButton("save SVG")
         save.clicked.connect(self._save)
-        for wdg in (self.sound_cb, self.mic_cb, self.glass_cb):
+        for wdg in (self.sound_cb, self.mic_cb):
             ctl.addWidget(wdg)
         ctl.addStretch()
         for b in self._view_btns.values():

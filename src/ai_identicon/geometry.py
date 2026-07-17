@@ -19,6 +19,11 @@ import random
 
 from .genome import Genome, MATERIALS, MATERIAL_PARAMS
 
+# Max cluster reach (farthest shard edge from centre, in shard-radius units).
+# Bounds how far fragmentation can scatter a multi-shard avatar so it stays a
+# frame-filling group rather than sparse debris.
+_SPREAD_CAP = 2.3
+
 
 # ----------------------------------------------------------------- color math
 
@@ -303,6 +308,20 @@ def build_cluster(genome: Genome, vol_min: float, vol_max: float) -> list[dict]:
             sh["size"] *= f
             sh["dist"] *= f
             sh["pos"] = [q * f for q in sh["pos"]]
+
+    # SPREAD CAP: high fragmentation across many shards can fling the cluster
+    # so wide it becomes tiny pieces lost in an empty frame. Cap the overall
+    # reach (farthest shard edge from centre) so heavily-fragmented avatars
+    # stay a recognizable, frame-filling group — fragmentation still clearly
+    # scatters, it just doesn't run away.
+    if n > 1:
+        reach = max(math.sqrt(sum(q * q for q in sh["pos"])) + sh["size"] * sh["mesh"]["rad"]
+                    for sh in cluster)
+        if reach > _SPREAD_CAP:
+            sc = _SPREAD_CAP / reach
+            for sh in cluster:
+                sh["dist"] *= sc
+                sh["pos"] = [q * sc for q in sh["pos"]]
     return cluster
 
 

@@ -66,7 +66,6 @@ class AvatarModel:
     def __init__(self, genome: Genome, vol_min: float = 0.65, vol_max: float = 1.2):
         self.vol_min = vol_min
         self.vol_max = vol_max
-        self.transparent = False        # glassy mode (per-shard translucency)
         self._amplitude: float | None = None   # external voice envelope, 0..1
         self._spectrum: list[float] | None = None  # live frequency bands
         self._cue: str | None = None    # one-shot sound cue for the renderer

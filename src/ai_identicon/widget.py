@@ -8,8 +8,9 @@ ring. It also hosts the static portrait "preview" (via portrait.py) and plays
 the model's one-shot sound cues through an optional SoundBank.
 
 Integration surface: set_state(), set_amplitude(), set_spectrum(),
-set_genome(), set_transparent(), set_preview(). All behavior lives in the
-model; this file is pixels.
+set_genome(), set_preview(). All behavior lives in the model; this file is
+pixels. (Glassy transparency is intrinsic to crystal/glass materials — not a
+toggle.)
 """
 
 from __future__ import annotations
@@ -78,9 +79,6 @@ class PresenceWidget(QWidget):
 
     def set_spectrum(self, bands) -> None:
         self.model.set_spectrum(bands)
-
-    def set_transparent(self, on: bool) -> None:
-        self.model.transparent = on
 
     def set_genome(self, genome: Genome) -> None:
         self.model.set_genome(genome)
@@ -161,7 +159,9 @@ class PresenceWidget(QWidget):
         alpha = 255  # opaque: back faces culled, so nothing shows through
         # frost is the opaque stand-in for translucency; glassy mode does real
         # transparency instead, so skip it there (else glass whitens twice)
-        frost = 0.0 if m.transparent else 0.22 * g.translucency
+        # frost is the opaque stand-in for translucency; the see-through
+        # materials get real transparency instead, so skip frost there
+        frost = 0.0 if MATERIALS[g.material] in _GLASSY_MATERIALS else 0.22 * g.translucency
         white_cap = 0.55 + 0.35 * min(1.0, max(0.0, (len(mesh["faces"]) - 8) / 20.0))
 
         rotated = [geometry.rotate(v, ax, ay) for v in mesh["verts"]]
@@ -341,7 +341,10 @@ class PresenceWidget(QWidget):
             off = geometry.rotate(sh["pos"], ax, m.ay)
             placed.append((off[2], cx + off[0] * r, cy - off[1] * r, sh))
         ordered = sorted(placed, key=lambda e: e[0])
-        glassy = m.transparent and MATERIALS[g.material] in _GLASSY_MATERIALS
+        # glassy transparency is an intrinsic property of the see-through
+        # materials (crystal/glass), scaled by the genome's translucency — not
+        # a user toggle. Stone/metal are always opaque.
+        glassy = MATERIALS[g.material] in _GLASSY_MATERIALS
         shard_op = (1.0 - 0.55 * g.translucency) if glassy else 1.0
         for si, (oz, sx, sy, sh) in enumerate(ordered):
             depth = si / (len(ordered) - 1) if len(ordered) > 1 else 1.0

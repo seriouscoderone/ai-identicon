@@ -6,8 +6,11 @@ shading pipeline alters what an existing seed produces, these tests fail —
 which is the whole point: a published identicon must render the same avatar
 for the same seed, forever, under a given ALGO_VERSION.
 
-If you INTEND to change generation, do NOT edit v1: add `_derive_v2`, bump
-ALGO_VERSION, and write a golden_v2.json. v1 and its golden stay frozen.
+Two tiers: the derived genome FIELDS are frozen by ALGO_VERSION — to change
+genome generation, add `_derive_v2`, bump ALGO_VERSION, write a golden_v2 (v1
+stays frozen). The rendered-SVG hashes track the geometry/shading pipeline,
+which is still being refined pre-1.0; a deliberate rendering change re-pins
+them with a package minor bump (the genome fields must remain unchanged).
 
 Run: .venv/bin/python -m pytest tests/unit/avatar -q --import-mode=importlib
 """
