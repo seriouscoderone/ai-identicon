@@ -30,8 +30,12 @@ from PySide6.QtGui import (
 from PySide6.QtWidgets import QWidget
 
 from . import geometry, portrait
-from .genome import Genome
+from .genome import Genome, MATERIALS
 from .model import AvatarModel, AvatarState
+
+# "glassy" (literal per-shard transparency) only reads as a material property
+# on the see-through materials; stone and metal stay opaque even when toggled.
+_GLASSY_MATERIALS = frozenset({"crystal", "glass"})
 
 try:
     from PySide6.QtSvg import QSvgRenderer
@@ -337,7 +341,8 @@ class PresenceWidget(QWidget):
             off = geometry.rotate(sh["pos"], ax, m.ay)
             placed.append((off[2], cx + off[0] * r, cy - off[1] * r, sh))
         ordered = sorted(placed, key=lambda e: e[0])
-        shard_op = (1.0 - 0.55 * g.translucency) if m.transparent else 1.0
+        glassy = m.transparent and MATERIALS[g.material] in _GLASSY_MATERIALS
+        shard_op = (1.0 - 0.55 * g.translucency) if glassy else 1.0
         for si, (oz, sx, sy, sh) in enumerate(ordered):
             depth = si / (len(ordered) - 1) if len(ordered) > 1 else 1.0
             args = (sh["mesh"], ax + sh["dax"], m.ay + sh["day"] + sh["drift"],
