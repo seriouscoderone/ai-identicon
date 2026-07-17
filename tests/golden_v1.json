@@ -34,9 +34,9 @@
         888639853
       ],
       "svg": {
-        "black": "801c78e3b3c3152c",
-        "black40": "e5c3a189726c0127",
-        "color": "2fccbbd3695945c2"
+        "black": "3c4db6dd3fd5b78a",
+        "black40": "4ebff8b5735f28d7",
+        "color": "3f5215e59c69c1b1"
       }
     },
     "EK7f2p_prefix_example": {
@@ -74,7 +74,7 @@
       "svg": {
         "black": "5324865bbc3783ca",
         "black40": "1fd341fe1bcd5412",
-        "color": "e821e9b235766c24"
+        "color": "60f496026bedfb19"
       }
     },
     "ai-identicon": {
@@ -112,7 +112,7 @@
       "svg": {
         "black": "eeaabf30431adce5",
         "black40": "1eb618d6ce3033c5",
-        "color": "15a00044746370ef"
+        "color": "ae36d1686b7f99c8"
       }
     },
     "alice": {
@@ -150,7 +150,7 @@
       "svg": {
         "black": "cb27a80dea76bbe7",
         "black40": "be8a85264da2f450",
-        "color": "c0770c9874d5ea7c"
+        "color": "986f09eb5e3c2b41"
       }
     },
     "bmev5p5akc": {
@@ -188,7 +188,7 @@
       "svg": {
         "black": "48a1db34542848dd",
         "black40": "be0e5c5e83a118d1",
-        "color": "01159dd57ceaec7e"
+        "color": "10d214182aafb5ba"
       }
     },
     "bob": {
@@ -226,7 +226,7 @@
       "svg": {
         "black": "b04bd66d840854b5",
         "black40": "60c06fb54a0ba106",
-        "color": "ce8940da22284fb6"
+        "color": "f94ec6bbf90e151b"
       }
     },
     "seriouscoderone": {
@@ -264,7 +264,7 @@
       "svg": {
         "black": "255ec5aea762c6c0",
         "black40": "1246a667f85129ef",
-        "color": "72645f83a6bb56c9"
+        "color": "cd231c5f8eeec889"
       }
     }
   }

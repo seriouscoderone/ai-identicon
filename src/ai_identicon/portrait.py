@@ -232,8 +232,11 @@ def color_svg(genome: Genome, size: int = 512, px: int | None = None,
             mz = (a[2] + b[2] + c[2]) / 3 - off[2]
             if nx * mx + ny * my + nz * mz < 0:  # outward normal
                 nx, ny, nz = -nx, -ny, -nz
-            if nz <= 0.0:  # back-facing: hidden behind the front hull
-                continue
+            # NB: no back-face culling. All faces are emitted and painted
+            # back-to-front (see the depth sort below); on a convex shard the
+            # front faces always cover the back ones, so the silhouette is
+            # filled with no holes — culling could drop a near-edge-on face on
+            # a flat shard and leave a gap.
             nlen = math.sqrt(nx * nx + ny * ny + nz * nz) or 1.0
             nx, ny, nz = nx / nlen, ny / nlen, nz / nlen
             lit = max(0.0, nx * lx + ny * ly + nz * lz)

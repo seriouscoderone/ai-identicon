@@ -198,7 +198,11 @@ def _build_shard_once(face_count: int, roughness: float,
     which keeps painter's-algorithm depth sorting safe. roughness may exceed
     1.0 (fragment jitter) — the range is deliberately extreme at the top.
     """
-    n_pts = max(4, (face_count + 4) // 2)
+    # Floor of 8 points: a 6-point hull is an octahedron whose volume-to-
+    # radius is so low it can't clear the plumpness bar however the elongation
+    # is eased — the flat-shard/"missing face" failure mode. 8+ points give a
+    # hull round enough for the plumpness guard to actually succeed.
+    n_pts = max(8, (face_count + 4) // 2)
     verts = []
     if spread:  # jittered fibonacci lattice: organic but never planar
         golden = math.pi * (3.0 - math.sqrt(5.0))

@@ -201,8 +201,9 @@ class PresenceWidget(QWidget):
                 nx, ny, nz = -nx, -ny, -nz
             nlen = math.sqrt(nx * nx + ny * ny + nz * nz) or 1.0
             nx, ny, nz = nx / nlen, ny / nlen, nz / nlen
-            if nz <= 0.0:  # back-facing: cull, so nothing shows through
-                continue
+            # no back-face culling: all faces painted back-to-front (order
+            # above), so a convex shard fills its silhouette with no holes —
+            # culling could drop a near-edge-on face on a flat shard.
 
             lit = max(0.0, nx * lx + ny * ly + nz * lz)
             val = (0.30 + 0.85 * lit) * bright * mat["val_bias"]

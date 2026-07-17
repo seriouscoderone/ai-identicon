@@ -5,6 +5,20 @@ to [Semantic Versioning](https://semver.org). The package version is
 independent of `ALGO_VERSION` (the frozen avatar-generation contract): a
 package release never changes an existing seed's avatar.
 
+## [0.4.0] — 2026-07-17
+
+Solidity fixes (rendering-only; ALGO_VERSION 1 genome derivation unchanged,
+golden SVG hashes re-pinned).
+
+- **No more missing faces.** Dropped back-face culling in the color portrait
+  and live widget; all faces are painted back-to-front, so a convex shard
+  always fills its silhouette (culling could drop a near-edge-on face on a
+  flat shard and leave a hole).
+- **Minimum 8 vertices per shard.** A 6-vertex hull is a low-volume
+  octahedron that can never satisfy the plumpness constraint, yielding flat
+  "blade" shards; the floor lets the guard actually succeed, so shards are
+  reliably chunky.
+
 ## [0.3.0] — 2026-07-17
 
 Thinking behavior + scatter refinements (rendering-only; ALGO_VERSION 1 genome
