@@ -88,6 +88,8 @@ class Demo(QWidget):
             b.setCheckable(True)
             b.clicked.connect(lambda _=False, mo=mode: self._toggle_view(mo))
             self._view_btns[mode] = b
+        copy = QPushButton("copy 📋")
+        copy.clicked.connect(self._copy)
         save = QPushButton("save SVG")
         save.clicked.connect(self._save)
         for wdg in (self.sound_cb, self.mic_cb):
@@ -95,6 +97,7 @@ class Demo(QWidget):
         ctl.addStretch()
         for b in self._view_btns.values():
             ctl.addWidget(b)
+        ctl.addWidget(copy)
         ctl.addWidget(save)
 
         left = QVBoxLayout()
@@ -259,13 +262,20 @@ class Demo(QWidget):
             self._mic.stop()
             self._mic = None
 
+    def _copy(self):
+        # copy the current portrait variant (or color when showing the live
+        # avatar) to the clipboard as a pasteable PNG
+        variant = self.orb.preview_mode or "color"
+        self.orb.copy_to_clipboard(variant=variant)
+        self.caption.setText(f"copied {self._seed} ({variant}) to clipboard — paste anywhere")
+
     def _save(self):
         outdir = Path(__file__).resolve().parent / "avatars"
         g = self.orb.genome
         for variant in ("black", "white", "color"):
             export_svg(g, outdir / f"{self._seed}-{variant}.svg", variant=variant,
                        vol_min=self.orb.model.vol_min, vol_max=self.orb.model.vol_max)
-        self.caption.setText(f"saved {self._seed} black/white/color → poc/avatars/")
+        self.caption.setText(f"saved {self._seed} black/white/color → examples/avatars/")
 
     def _update_caption(self):
         pv = self.orb.preview_mode

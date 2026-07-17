@@ -5,6 +5,15 @@ to [Semantic Versioning](https://semver.org). The package version is
 independent of `ALGO_VERSION` (the frozen avatar-generation contract): a
 package release never changes an existing seed's avatar.
 
+## [0.5.0] — 2026-07-17
+
+- **Copy to clipboard** (`ai_identicon.clipboard`, Qt extra): rasterize an
+  avatar to PNG and put it on the system clipboard to paste into Obsidian, MS
+  Teams, Signal, Discord, Slack, docs, etc. PNG (not SVG) is what those apps
+  paste reliably, and it keeps transparency. The SVG is attached as a bonus
+  MIME type. Convenience: `PresenceWidget.copy_to_clipboard()`, and a
+  **copy 📋** button in the gallery.
+
 ## [0.4.0] — 2026-07-17
 
 Solidity fixes (rendering-only; ALGO_VERSION 1 genome derivation unchanged,

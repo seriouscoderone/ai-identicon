@@ -86,6 +86,14 @@ class PresenceWidget(QWidget):
             self.set_preview(self._preview)
         self.update()
 
+    def copy_to_clipboard(self, variant: str = "color", size: int = 512,
+                          background: str | None = None) -> None:
+        """Copy this avatar to the system clipboard as a pasteable PNG."""
+        from .clipboard import copy_to_clipboard
+        copy_to_clipboard(self.model.genome, size=size, variant=variant,
+                          background=background,
+                          vol_min=self.model.vol_min, vol_max=self.model.vol_max)
+
     @property
     def genome(self) -> Genome:
         return self.model.genome

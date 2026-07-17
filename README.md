@@ -69,7 +69,22 @@ ctl = AvatarController(orb)       # map your assistant's lifecycle to states
 ctl.thinking(); ctl.speaking(); ctl.on_audio(amplitude=level)
 ```
 
-Run the interactive gallery: `python examples/gallery.py`.
+Run the interactive gallery: `python examples/gallery.py` (its **copy 📋**
+button puts the avatar on the clipboard to paste into chats/notes).
+
+## Copy to clipboard (Qt)
+
+```python
+from ai_identicon import Genome
+from ai_identicon.clipboard import copy_to_clipboard   # needs a running Qt app
+
+copy_to_clipboard(Genome.from_seed("agent://alice"))   # pasteable PNG
+```
+
+Copies a **PNG** (with the SVG attached as a bonus MIME) — PNG is the format
+that pastes reliably into Obsidian, MS Teams, Signal, Discord, Slack, and
+docs, and it keeps transparency so the avatar drops onto any background. The
+live widget has a convenience method too: `presence_widget.copy_to_clipboard()`.
 
 ## Customization & brands
 
