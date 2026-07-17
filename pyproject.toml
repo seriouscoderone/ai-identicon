@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ai-identicon"
+version = "0.1.0"
+description = "Generative, animated avatars for AI agents — deterministic from a seed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Joseph Hunsaker" }]
+keywords = ["identicon", "avatar", "generative", "agent", "ai", "svg", "keri"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Software Development :: User Interfaces",
+]
+dependencies = []  # the core (genome/geometry/model/portrait/controller) is dependency-free
+
+[project.optional-dependencies]
+qt = ["PySide6>=6.5"]          # the live widget + audio (audio also needs QtMultimedia)
+test = ["pytest>=7"]
+
+[project.urls]
+Homepage = "https://github.com/seriouscoderone/ai-identicon"
+Repository = "https://github.com/seriouscoderone/ai-identicon"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ai_identicon"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

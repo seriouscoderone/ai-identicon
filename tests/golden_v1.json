@@ -1,0 +1,271 @@
+{
+  "algo_version": 1,
+  "seeds": {
+    "8f2p7ke747": {
+      "fields": {
+        "edge_hue": 90,
+        "elong": [
+          0.408679,
+          0.058282,
+          0.973168
+        ],
+        "express": 0.656075,
+        "faces": 68,
+        "frag": 0.879699,
+        "hue": 45,
+        "material": 3,
+        "mesh_seed": 16252371295624110528,
+        "n_colors": 2,
+        "roughness": 0.711523,
+        "shapes": 3,
+        "sharp": 0.111487,
+        "shine": 0.868135,
+        "tempo": 0.373044,
+        "thinking": 2,
+        "tilt": -0.328905,
+        "translucency": 0.713885,
+        "voice": 1
+      },
+      "shard_seeds": [
+        683826828,
+        717378772,
+        155089662,
+        995955636,
+        888639853
+      ],
+      "svg": {
+        "black": "e788b463f77664b6",
+        "black40": "14594545f482f16e",
+        "color": "10dcea1d29fbcfa5"
+      }
+    },
+    "EK7f2p_prefix_example": {
+      "fields": {
+        "edge_hue": 355,
+        "elong": [
+          0.391344,
+          0.488575,
+          0.0
+        ],
+        "express": 0.232158,
+        "faces": 38,
+        "frag": 0.342408,
+        "hue": 355,
+        "material": 2,
+        "mesh_seed": 2124904301640400958,
+        "n_colors": 3,
+        "roughness": 0.514443,
+        "shapes": 2,
+        "sharp": 0.230759,
+        "shine": 0.590152,
+        "tempo": 0.478478,
+        "thinking": 1,
+        "tilt": 0.457499,
+        "translucency": 0.0,
+        "voice": 0
+      },
+      "shard_seeds": [
+        1052744263,
+        119746130,
+        784515492,
+        343776434,
+        941738160
+      ],
+      "svg": {
+        "black": "5324865bbc3783ca",
+        "black40": "1fd341fe1bcd5412",
+        "color": "e821e9b235766c24"
+      }
+    },
+    "ai-identicon": {
+      "fields": {
+        "edge_hue": 25,
+        "elong": [
+          0.0,
+          0.400095,
+          0.228731
+        ],
+        "express": 0.277043,
+        "faces": 84,
+        "frag": 0.727025,
+        "hue": 25,
+        "material": 0,
+        "mesh_seed": 15906225666738961484,
+        "n_colors": 2,
+        "roughness": 0.865269,
+        "shapes": 1,
+        "sharp": 0.375901,
+        "shine": 0.911889,
+        "tempo": 0.52191,
+        "thinking": 1,
+        "tilt": -0.728341,
+        "translucency": 0.0,
+        "voice": 0
+      },
+      "shard_seeds": [
+        475854221,
+        211918495,
+        650696913,
+        181466591,
+        216849893
+      ],
+      "svg": {
+        "black": "eeaabf30431adce5",
+        "black40": "1eb618d6ce3033c5",
+        "color": "15a00044746370ef"
+      }
+    },
+    "alice": {
+      "fields": {
+        "edge_hue": 75,
+        "elong": [
+          0.004704,
+          0.220787,
+          0.469655
+        ],
+        "express": 0.578693,
+        "faces": 26,
+        "frag": 0.419002,
+        "hue": 75,
+        "material": 0,
+        "mesh_seed": 1882437791190049705,
+        "n_colors": 1,
+        "roughness": 0.661506,
+        "shapes": 1,
+        "sharp": 0.235314,
+        "shine": 0.264043,
+        "tempo": 0.339201,
+        "thinking": 0,
+        "tilt": -0.17374,
+        "translucency": 0.126569,
+        "voice": 0
+      },
+      "shard_seeds": [
+        832445791,
+        446821807,
+        335922320,
+        425215420,
+        912840850
+      ],
+      "svg": {
+        "black": "cb27a80dea76bbe7",
+        "black40": "be8a85264da2f450",
+        "color": "c0770c9874d5ea7c"
+      }
+    },
+    "bmev5p5akc": {
+      "fields": {
+        "edge_hue": 205,
+        "elong": [
+          0.657303,
+          0.387011,
+          0.2357
+        ],
+        "express": 0.606006,
+        "faces": 68,
+        "frag": 0.572693,
+        "hue": 250,
+        "material": 1,
+        "mesh_seed": 5178630016153170831,
+        "n_colors": 1,
+        "roughness": 0.537757,
+        "shapes": 2,
+        "sharp": 0.248694,
+        "shine": 0.526587,
+        "tempo": 0.431555,
+        "thinking": 0,
+        "tilt": 0.624344,
+        "translucency": 0.415482,
+        "voice": 1
+      },
+      "shard_seeds": [
+        415490254,
+        13956247,
+        642253126,
+        807916583,
+        30829713
+      ],
+      "svg": {
+        "black": "48a1db34542848dd",
+        "black40": "be0e5c5e83a118d1",
+        "color": "01159dd57ceaec7e"
+      }
+    },
+    "bob": {
+      "fields": {
+        "edge_hue": 0,
+        "elong": [
+          0.122707,
+          0.457745,
+          0.09136
+        ],
+        "express": 0.679093,
+        "faces": 66,
+        "frag": 0.759461,
+        "hue": 45,
+        "material": 1,
+        "mesh_seed": 7159006615424966935,
+        "n_colors": 3,
+        "roughness": 0.415335,
+        "shapes": 1,
+        "sharp": 0.50774,
+        "shine": 0.568642,
+        "tempo": 0.406917,
+        "thinking": 3,
+        "tilt": -0.319269,
+        "translucency": 0.48341,
+        "voice": 0
+      },
+      "shard_seeds": [
+        822393223,
+        259646365,
+        559599499,
+        434499541,
+        264944725
+      ],
+      "svg": {
+        "black": "b04bd66d840854b5",
+        "black40": "60c06fb54a0ba106",
+        "color": "ce8940da22284fb6"
+      }
+    },
+    "seriouscoderone": {
+      "fields": {
+        "edge_hue": 205,
+        "elong": [
+          0.730343,
+          0.752076,
+          0.365807
+        ],
+        "express": 0.762822,
+        "faces": 74,
+        "frag": 0.612092,
+        "hue": 45,
+        "material": 0,
+        "mesh_seed": 11820575511169370166,
+        "n_colors": 2,
+        "roughness": 0.790033,
+        "shapes": 2,
+        "sharp": 0.454766,
+        "shine": 0.584668,
+        "tempo": 0.373178,
+        "thinking": 2,
+        "tilt": 0.210522,
+        "translucency": 0.165095,
+        "voice": 0
+      },
+      "shard_seeds": [
+        983700641,
+        988435626,
+        529116295,
+        809641721,
+        210534550
+      ],
+      "svg": {
+        "black": "255ec5aea762c6c0",
+        "black40": "1246a667f85129ef",
+        "color": "72645f83a6bb56c9"
+      }
+    }
+  }
+}
