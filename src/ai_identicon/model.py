@@ -265,13 +265,11 @@ class AvatarModel:
                 sh["drift"] += (target - sh["drift"]) * (1.0 - math.exp(-dt * 2.5))
 
         # shard micro-physics (springs + collisions), wander quieted while
-        # face-locked; breakup thinking pushes the shards apart rhythmically
+        # face-locked. NOTE: breakup thinking does NOT move the shards — they
+        # hold position; only their facets fragment (the renderer's per-facet
+        # "explode"). Pushing the shards apart here flung outliers far away.
         if len(self.cluster) > 1:
-            pulse = 0.25 + 0.75 * (0.5 + 0.5 * math.sin(self.t * 1.15 * k_t)) ** 1.8
-            sep = 1.0
-            if self.thinking_style == "breakup":
-                sep += 0.9 * self.cur["think_mix"] * pulse * self.k_e
-            geometry.physics_step(self.cluster, dt, sep=sep,
+            geometry.physics_step(self.cluster, dt,
                                   wander_amp=0.30 * (1.0 - 0.75 * fm),
                                   t=self.t, k_t=k_t)
 

@@ -5,6 +5,18 @@ to [Semantic Versioning](https://semver.org). The package version is
 independent of `ALGO_VERSION` (the frozen avatar-generation contract): a
 package release never changes an existing seed's avatar.
 
+## [0.3.0] — 2026-07-17
+
+Thinking behavior + scatter refinements (rendering-only; ALGO_VERSION 1 genome
+derivation unchanged, golden SVG hashes re-pinned).
+
+- **Breakup thinking no longer moves the shards.** They hold their positions;
+  only their facets fragment (the per-facet "explode"). Previously the
+  shard-level separation flung a far outlier way out of frame.
+- **Outlier containment.** A per-shard home-distance cap (plus a slightly
+  tighter overall spread cap) keeps a single high-`draw` shard from sitting
+  off on its own, so heavily-fragmented avatars read as one grouped cluster.
+
 ## [0.2.0] — 2026-07-17
 
 Rendering refinements (pre-1.0; genome derivation / `ALGO_VERSION 1` unchanged,

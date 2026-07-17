@@ -36,7 +36,7 @@ from .model import AvatarModel, AvatarState
 from .portrait import color_svg, export_svg, line_art_svg
 from .controller import AvatarController
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 __all__ = [
     "__version__",

@@ -19,10 +19,13 @@ import random
 
 from .genome import Genome, MATERIALS, MATERIAL_PARAMS
 
-# Max cluster reach (farthest shard edge from centre, in shard-radius units).
-# Bounds how far fragmentation can scatter a multi-shard avatar so it stays a
-# frame-filling group rather than sparse debris.
-_SPREAD_CAP = 2.3
+# Bounds on how far fragmentation can scatter a multi-shard avatar so it stays
+# a frame-filling group rather than sparse debris with a lone far outlier:
+#   _MAX_SHARD_DIST — per-shard home distance cap (reins in a single outlier)
+#   _SPREAD_CAP     — overall cluster reach cap (farthest shard edge from centre)
+# both in shard-radius units.
+_MAX_SHARD_DIST = 1.7
+_SPREAD_CAP = 2.1
 
 
 # ----------------------------------------------------------------- color math
@@ -280,8 +283,10 @@ def build_cluster(genome: Genome, vol_min: float, vol_max: float) -> list[dict]:
         # collision contact floor, so shards settle into a compact cracked
         # whole; high frag pushes homes far past contact, so they scatter as
         # a debris field. The gain is tuned so the range clearly exceeds the
-        # contact distance (a smaller range gets swallowed by collisions).
-        dist = 0.0 if n == 1 else (0.15 + 2.0 * genome.frag ** 1.3) * s["draw"]
+        # contact distance (a smaller range gets swallowed by collisions), and
+        # a per-shard cap keeps one high-`draw` shard from flying off alone.
+        dist = 0.0 if n == 1 else min(_MAX_SHARD_DIST,
+                                      (0.15 + 2.0 * genome.frag ** 1.3) * s["draw"])
         size = (w ** (1.0 / 3.0)) * 1.05 / (n ** 0.28)
         prng = random.Random(s["mesh_seed"] ^ 0x5EED)
         cluster.append(dict(
