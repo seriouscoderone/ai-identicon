@@ -36,6 +36,26 @@ open("alice-line.svg", "w").write(line_art_svg(g, "white"))  # line-art, for dar
   `controller` are pure Python. SVG portraits need nothing. The live animated
   widget and mic-reactive audio are an optional Qt extra.
 
+## The states
+
+The orb expresses what an agent is doing through motion and light — never a
+face. One seed (`bmev5p5akc`), all seven states:
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/states/idle.png" width="190"><br><b>idle</b><br><sub>at rest, breathing; the odd blink</sub></td>
+    <td align="center"><img src="docs/states/listening.png" width="190"><br><b>listening</b><br><sub>turns to face you; ripples drift inward</sub></td>
+    <td align="center"><img src="docs/states/thinking.png" width="190"><br><b>thinking</b><br><sub>comes apart to turn it over, gaze down‑right</sub></td>
+    <td align="center"><img src="docs/states/speaking.png" width="190"><br><b>speaking</b><br><sub>voice drawn as a waveform around it</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/states/notify.png" width="190"><br><b>notify</b><br><sub>a chirp and an excited spin; self‑returns</sub></td>
+    <td align="center"><img src="docs/states/success.png" width="190"><br><b>success</b><br><sub>a warm pulse and spin‑up; self‑returns</sub></td>
+    <td align="center"><img src="docs/states/error.png" width="190"><br><b>error</b><br><sub>seized: rotation frozen, amber, one flinch</sub></td>
+    <td align="center"><sub>notify / success / error are transient —<br>they play out and settle back to idle.</sub></td>
+  </tr>
+</table>
+
 ## Install
 
 ```bash
