@@ -9,7 +9,7 @@ pretending to be human.
 
 Same seed → same avatar, **forever**, under a given generation version.
 
-![The ai-identicon gallery: a live presence orb mid-thinking, with the full genome and personality controls](docs/gallery.png)
+![The ai-identicon gallery — a live "presence orb" at idle, with the full genome and personality controls](docs/gallery.png)
 
 ```python
 from ai_identicon import Genome, color_svg, line_art_svg
