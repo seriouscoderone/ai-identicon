@@ -1,9 +1,11 @@
 # ai-identicon — demo video script
 
 A showcase + explainer for **ai-identicon**: generative, animated avatars
-("presence orbs") for AI agents. Target length **~2.5–3 min** (a 60‑sec cut is
-marked at the end). Format per beat: **[SCREEN]** what's visible ·
-**[DO]** what to click · **[VO]** what to say.
+("presence orbs") for AI agents. Told **first person** — it opens and closes
+on *your* story (building thousands of AI assistants) and shows the tool in
+between. Target length **~3–3.5 min** (a 60‑sec cut is marked at the end).
+Format per beat: **[SCREEN]** what's visible · **[DO]** what to click ·
+**[VO]** what to say.
 
 Recording setup:
 - Run `python examples/gallery.py`. Window ~980×660; put it on a dark desktop.
@@ -15,18 +17,24 @@ Recording setup:
 
 ---
 
-## 1 · Hook (0:00–0:20)
+## 1 · Hook — the personal why (0:00–0:35)
 
-**[SCREEN]** The live orb at **idle** — slowly breathing, the occasional blink.
-Fill the frame with just the orb (crop out the panel if you can, or blur it).
+**[SCREEN]** Open on the live orb at **idle** — slowly breathing, the odd
+blink. Fill the frame with just the orb (crop out the panel, or blur it).
+Optional: on the "creepy / cheesy" lines, cut to a beat of uncanny AI‑face
+b‑roll and a cartoon‑assistant clip, then return to the orb.
 
-**[VO]**
-> Every AI agent needs an identity. But give it a human face and it's
-> creepy — give it a cartoon mascot and it's cheesy. So what does an agent
-> actually *look* like?
+**[VO — first person, straight to camera energy]**
+> I'm going to build **thousands** of AI assistants this year. Thousands.
 >
-> This is **ai-identicon**. It grows a unique, living "presence" for any agent
-> — deterministically, from nothing but a seed string.
+> And it hit me that every one of them needs to be someone you can
+> *recognize* — its own presence. Almost like a face.
+>
+> But "face" is a trap. Make it look human and it's instantly creepy — that
+> uncanny‑valley wrongness, like it's watching you. Make it a cartoon mascot
+> and it's cheesy. Neither is what I want standing in for an intelligence.
+>
+> So I built a different kind of face. This is **ai-identicon**.
 
 ---
 
@@ -125,28 +133,37 @@ real app as an image.
 
 ---
 
-## 7 · The serious part + outro (2:40–3:00)
+## 7 · The serious part + intrigue outro (2:55–3:25)
 
 **[SCREEN]** Back to the live orb (idle), or the color portrait. Optionally
-show the GitHub repo page.
+show the GitHub repo page, then the end card.
 
 **[VO]**
 > It's deterministic and versioned — an agent's face is frozen the day it's
-> born and never silently changes. It's a zero‑dependency Python core with an
-> optional Qt renderer, MIT‑licensed and open source.
+> born and never silently changes. Zero‑dependency Python core, optional live
+> renderer, open source, MIT.
 >
-> ai-identicon — a face for your agents that's neither creepy nor cheesy.
-> On GitHub now.
+> But here's the thing: this is just the *face*. And it brings me back to
+> where I started —
+>
+> How does one person build *thousands* of AI assistants? And what are they
+> all going to be *for*?
+>
+> Follow along to find out. This is where it starts.
 
-**[SCREEN]** End card: `github.com/seriouscoderone/ai-identicon`
+**[SCREEN]** End card: `github.com/seriouscoderone/ai-identicon` + your handle
+/ "follow for what's next".
 
 ---
 
 ## 60‑second cut
 
-Use beats **1** (hook, 0:00–0:12), **2** (dice through a few seeds, 0:12–0:25),
-**3** (states — idle → listening → thinking → speaking only, 0:25–0:45),
-**6** (portraits + one paste, 0:45–0:55), **7** (outro + repo card, 0:55–1:00).
+Use beats **1** (hook — trim to just "I'm building thousands of AI assistants…
+so what should they look like?", 0:00–0:14), **2** (dice through a few seeds,
+0:14–0:26), **3** (states — idle → listening → thinking → speaking only,
+0:26–0:44), **6** (portraits + one paste, 0:44–0:52), **7** (intrigue outro —
+"how does one person build thousands? follow to find out" + repo card,
+0:52–1:00).
 
 ## Screenshot suggestions (for the still)
 
