@@ -136,6 +136,39 @@ An avatar is an identity **affordance**, not a control. A determined party can
 grind seeds toward a look-alike, so never let the avatar substitute for a
 verifiable identifier (e.g. show the full AID/prefix where trust matters).
 
+## Meet some of the faces
+
+Sixteen names, sixteen seeds, sixteen agents you'd know on sight. Each one is
+just `Genome.from_seed(name)` rendered as a color portrait — deterministic, so
+"James" always looks like *James*, everywhere, forever. 👋
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/faces/James.png" width="150"><br><sub>James</sub></td>
+    <td align="center"><img src="docs/faces/Mary.png" width="150"><br><sub>Mary</sub></td>
+    <td align="center"><img src="docs/faces/Michael.png" width="150"><br><sub>Michael</sub></td>
+    <td align="center"><img src="docs/faces/Jennifer.png" width="150"><br><sub>Jennifer</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/faces/William.png" width="150"><br><sub>William</sub></td>
+    <td align="center"><img src="docs/faces/Elizabeth.png" width="150"><br><sub>Elizabeth</sub></td>
+    <td align="center"><img src="docs/faces/David.png" width="150"><br><sub>David</sub></td>
+    <td align="center"><img src="docs/faces/Sarah.png" width="150"><br><sub>Sarah</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/faces/John.png" width="150"><br><sub>John</sub></td>
+    <td align="center"><img src="docs/faces/Jessica.png" width="150"><br><sub>Jessica</sub></td>
+    <td align="center"><img src="docs/faces/Robert.png" width="150"><br><sub>Robert</sub></td>
+    <td align="center"><img src="docs/faces/Emily.png" width="150"><br><sub>Emily</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/faces/Joseph.png" width="150"><br><sub>Joseph</sub></td>
+    <td align="center"><img src="docs/faces/Emma.png" width="150"><br><sub>Emma</sub></td>
+    <td align="center"><img src="docs/faces/Daniel.png" width="150"><br><sub>Daniel</sub></td>
+    <td align="center"><img src="docs/faces/Olivia.png" width="150"><br><sub>Olivia</sub></td>
+  </tr>
+</table>
+
 ## License
 
 MIT.
