@@ -5,6 +5,16 @@ to [Semantic Versioning](https://semver.org). The package version is
 independent of `ALGO_VERSION` (the frozen avatar-generation contract): a
 package release never changes an existing seed's avatar.
 
+## [0.7.0] — 2026-07-18
+
+- **Breathing is now the aura, not the shape.** The crystal holds its size;
+  the glow halo gently expands/contracts (and softly brightens). A scaling
+  solid read as zooming — this reads as breath. Live-widget behavior change.
+- **Idle loops run at the live speed.** A full revolution now takes the same
+  time as the running app (~20–37s depending on the avatar's tempo) instead of
+  the previous ~5s; blinks stay quick via a time-based render with a dense
+  frame burst, and breathing completes whole cycles per revolution (seamless).
+
 ## [0.6.1] — 2026-07-18
 
 - Idle loops now show **personality**: tempo sets each avatar's loop speed,

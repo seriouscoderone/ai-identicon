@@ -31,11 +31,16 @@ from ai_identicon.model import AvatarState            # noqa: E402
 
 NAMES = ["James", "Mary", "Michael", "Jennifer", "William", "Elizabeth", "David",
          "Sarah", "John", "Jessica", "Robert", "Emily", "Joseph", "Emma", "Daniel", "Olivia"]
-BREATHS_PER_REV = 4
-FRAMES = 96
+BREATHS_PER_REV = 4        # whole cycles per revolution → seamless
+BASE_FPS = 10              # smooth enough for such a slow rotation
+YAW_RATE = 0.23            # live idle yaw: dθ/dt = YAW_RATE * k_t  (rad/s)
 
 
-def render_loop(seed: str, path: str, size: int, zoom: float, quality: int = 85):
+def render_loop(seed: str, path: str, size: int, zoom: float, quality: int = 86):
+    """One seamless revolution at the LIVE idle speed. Time-based: a full turn
+    takes 2π/(YAW_RATE·k_t) seconds (≈27s at mid tempo, faster/slower by the
+    avatar's tempo), sampled at BASE_FPS with a short dense burst so the blink
+    stays quick even though the rotation is slow. Breathing = aura pulse."""
     w = PresenceWidget(Genome.from_seed(seed))
     w._timer.stop()
     w.setFixedSize(size, size)
@@ -48,37 +53,44 @@ def render_loop(seed: str, path: str, size: int, zoom: float, quality: int = 85)
     w.model.ax_tumble = 0.0
 
     direction = 1.0 if (g.mesh_seed % 2 == 0) else -1.0   # per-seed spin sense
-    a_breath = 0.025 + 0.06 * g.express                   # expressive → depth
-    # tempo → playback speed: higher tempo, shorter frame duration (spins/breathes faster)
-    frame_ms = max(30, min(80, round(52.0 / w.model.k_t)))
+    a_breath = 0.025 + 0.06 * g.express                   # expressive → aura depth
+    T = 2 * math.pi / (YAW_RATE * w.model.k_t)            # sec/rev; tempo → speed
+    t_blink = T * 0.5
 
-    imgs = []
-    for k in range(FRAMES):
-        phi = k / FRAMES
+    # frame timeline: a base grid, plus a dense ~0.24s burst around the blink
+    times = {round(i / BASE_FPS, 4) for i in range(int(T * BASE_FPS))}
+    times |= {round(t_blink + j * 0.03, 4) for j in range(-4, 5)}
+    times = sorted(t for t in times if 0.0 <= t < T)
+
+    imgs, durs = [], []
+    for idx, t in enumerate(times):
+        nxt = times[idx + 1] if idx + 1 < len(times) else T
+        durs.append(max(20, round((nxt - t) * 1000)))
+        phi = t / T
         w.model.t = 0.0                                   # kill ambient sway/bob
         w.model.ay = direction * 2 * math.pi * phi        # one full revolution
         w.model.breath_override = 1.0 + a_breath * math.sin(2 * math.pi * BREATHS_PER_REV * phi)
-        w.model.blink_override = 1.0 - 0.5 * math.exp(-((phi - 0.5) / 0.035) ** 2)
+        w.model.blink_override = 1.0 - 0.5 * math.exp(-((t - t_blink) / 0.06) ** 2)  # ~0.15s blink
         q = w.grab().toImage()
         ba = QByteArray(); buf = QBuffer(ba); buf.open(QBuffer.WriteOnly)
         q.save(buf, "PNG"); buf.close()
         imgs.append(Image.open(io.BytesIO(bytes(ba))).convert("RGB"))
 
     imgs[0].save(path, save_all=True, append_images=imgs[1:],
-                 duration=frame_ms, loop=0, quality=quality, method=6)
-    return frame_ms, os.path.getsize(path)
+                 duration=durs, loop=0, quality=quality, method=6)
+    return len(imgs), round(T, 1), os.path.getsize(path)
 
 
 def main():
     QApplication(sys.argv[:1])
     root = os.path.join(os.path.dirname(__file__), "..", "docs")
-    ms, sz = render_loop("bmev5p5akc", os.path.join(root, "hero.webp"), 380, zoom=1.22)
-    print(f"hero: {ms}ms/frame, {sz // 1024} KB")
+    n, T, sz = render_loop("bmev5p5akc", os.path.join(root, "hero.webp"), 380, zoom=1.22)
+    print(f"hero: {n} frames, {T}s/rev, {sz // 1024} KB")
     total = 0
     for name in NAMES:
-        ms, sz = render_loop(name, os.path.join(root, "faces", f"{name}.webp"), 220, zoom=1.35)
+        n, T, sz = render_loop(name, os.path.join(root, "faces", f"{name}.webp"), 220, zoom=1.35)
         total += sz
-        print(f"  {name:10} {ms}ms/frame")
+        print(f"  {name:10} {n}f  {T}s/rev  {sz // 1024}KB")
     print(f"16 faces: {total // 1024} KB total (avg {total // 1024 // 16} KB)")
 
 

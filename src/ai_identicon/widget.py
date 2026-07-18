@@ -295,7 +295,11 @@ class PresenceWidget(QWidget):
         k_e, k_t = m.k_e, m.k_t
         w, h = self.width(), self.height()
         base_r = min(w, h) * 0.13 * self.zoom
-        r = base_r * m.cur["scale"] * m.breath()
+        # the shards hold their size (state scale only) — "breathing" is the
+        # AURA gently expanding/contracting, applied to the glow below, not a
+        # scaling of the solid (a scaling shape reads as zooming, not breath)
+        r = base_r * m.cur["scale"]
+        pulse = m.breath()   # ~1 ± small; drives the glow halo
 
         think = m.cur["think_mix"]
         fm = m.cur["face_mix"]
@@ -317,12 +321,16 @@ class PresenceWidget(QWidget):
         p.setPen(Qt.NoPen)
         p.setCompositionMode(QPainter.CompositionMode_Plus)
 
-        glow_r = min(r * (2.4 + 0.5 * env) * m.cur["glow"] * bloom, min(w, h) * 0.60)
+        # breathing lives here: the halo radius (and, softly, its brightness)
+        # pulse with `pulse`, amplified so the aura's breath is visible while
+        # the crystal stays a fixed solid
+        glow_r = min(r * (2.4 + 0.5 * env) * m.cur["glow"] * bloom * (1.0 + 2.2 * (pulse - 1.0)),
+                     min(w, h) * 0.62)
         halo = QRadialGradient(QPointF(cx, cy), glow_r)
         # the aura is NOT dimmed by the blink — a blink dims the body, the
         # glow holds steady (reads better, and keeps the soft dark gradient
         # stable frame-to-frame so lossy encoders don't block it)
-        halo_alpha = min(115, int(70 * m.cur["glow"] * bloom))
+        halo_alpha = min(115, int(70 * m.cur["glow"] * bloom * (1.0 + 1.3 * (pulse - 1.0))))
         halo.setColorAt(0.0, QColor(*disp, halo_alpha))
         halo.setColorAt(1.0, QColor(*disp, 0))
         p.setBrush(halo)
