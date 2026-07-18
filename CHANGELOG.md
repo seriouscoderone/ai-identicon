@@ -5,6 +5,17 @@ to [Semantic Versioning](https://semver.org). The package version is
 independent of `ALGO_VERSION` (the frozen avatar-generation contract): a
 package release never changes an existing seed's avatar.
 
+## [0.6.1] — 2026-07-18
+
+- Idle loops now show **personality**: tempo sets each avatar's loop speed,
+  expressiveness sets breathing depth, and the seed picks the spin direction —
+  so they no longer all feel the same. Breathing and one blink complete whole
+  cycles per revolution, so the loop stays seamless.
+- The blink dims the orb body but leaves the **aura steady** (reads better, and
+  keeps the soft dark gradient stable so lossy encoders don't block it). New
+  internal `breath_override` / `blink_override` hooks on the model support
+  seamless loop rendering; see `scripts/render_readme_loops.py`.
+
 ## [0.6.0] — 2026-07-18
 
 - **`PresenceWidget.zoom`** — a render-scale knob (default 1.0) to size the orb

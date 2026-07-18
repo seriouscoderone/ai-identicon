@@ -69,6 +69,10 @@ class AvatarModel:
         self._amplitude: float | None = None   # external voice envelope, 0..1
         self._spectrum: list[float] | None = None  # live frequency bands
         self._cue: str | None = None    # one-shot sound cue for the renderer
+        # loop-render overrides (used to build seamless idle loops): when set,
+        # breath()/blink() return these instead of their time-driven values
+        self.breath_override: float | None = None
+        self.blink_override: float | None = None
 
         self.state = AvatarState.IDLE
         self._targets = dict(STATE_TARGETS[AvatarState.IDLE])
@@ -171,6 +175,8 @@ class AvatarModel:
 
     def blink(self) -> float:
         """Brightness multiplier for the current blink (1.0 = eyes open)."""
+        if self.blink_override is not None:
+            return self.blink_override
         if self.blink_t < 0.18:
             return 1.0 - 0.65 * math.sin(math.pi * self.blink_t / 0.18)
         return 1.0
@@ -187,6 +193,8 @@ class AvatarModel:
 
     def breath(self) -> float:
         """Slow idle size oscillation, paced by tempo."""
+        if self.breath_override is not None:
+            return self.breath_override
         return 1.0 + 0.030 * math.sin(self.t * 2 * math.pi * self.k_t / 6.5)
 
     @property

@@ -58,6 +58,7 @@ class PresenceWidget(QWidget):
         self.model = (genome_or_model if isinstance(genome_or_model, AvatarModel)
                       else AvatarModel(genome_or_model))
         self._sounds = sounds
+        self.zoom = 1.0           # orb size within the frame (1.0 = default)
         self._ring_r = 0.0        # smoothed listening/speaking circle radius
         self._preview: str | None = None
         self._preview_renderers: list = []
@@ -293,7 +294,7 @@ class PresenceWidget(QWidget):
         g = m.genome
         k_e, k_t = m.k_e, m.k_t
         w, h = self.width(), self.height()
-        base_r = min(w, h) * 0.13
+        base_r = min(w, h) * 0.13 * self.zoom
         r = base_r * m.cur["scale"] * m.breath()
 
         think = m.cur["think_mix"]
@@ -318,7 +319,10 @@ class PresenceWidget(QWidget):
 
         glow_r = min(r * (2.4 + 0.5 * env) * m.cur["glow"] * bloom, min(w, h) * 0.60)
         halo = QRadialGradient(QPointF(cx, cy), glow_r)
-        halo_alpha = min(115, int(70 * m.cur["glow"] * bloom * blink))
+        # the aura is NOT dimmed by the blink — a blink dims the body, the
+        # glow holds steady (reads better, and keeps the soft dark gradient
+        # stable frame-to-frame so lossy encoders don't block it)
+        halo_alpha = min(115, int(70 * m.cur["glow"] * bloom))
         halo.setColorAt(0.0, QColor(*disp, halo_alpha))
         halo.setColorAt(1.0, QColor(*disp, 0))
         p.setBrush(halo)
