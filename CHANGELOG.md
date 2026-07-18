@@ -5,6 +5,14 @@ to [Semantic Versioning](https://semver.org). The package version is
 independent of `ALGO_VERSION` (the frozen avatar-generation contract): a
 package release never changes an existing seed's avatar.
 
+## [0.6.0] — 2026-07-18
+
+- **`PresenceWidget.zoom`** — a render-scale knob (default 1.0) to size the orb
+  within its frame; used to fill the README tiles.
+- **Docs:** the README hero and the sixteen faces are now **true 360° spin
+  loops** (seamless full revolution) as animated WebP, zoomed in and lighter
+  than the earlier ping-pong loops per frame budget.
+
 ## [0.5.0] — 2026-07-17
 
 - **Copy to clipboard** (`ai_identicon.clipboard`, Qt extra): rasterize an

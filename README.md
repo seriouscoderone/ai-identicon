@@ -10,7 +10,7 @@ pretending to be human.
 Same seed → same avatar, **forever**, under a given generation version.
 
 <p align="center">
-  <img src="docs/hero.webp" width="340" alt="A presence orb idling — breathing, glowing, gently turning">
+  <img src="docs/hero.webp" width="360" alt="A presence orb idling — breathing, glowing, gently turning">
 </p>
 
 ![The ai-identicon gallery — a live "presence orb" at idle, with the full genome and personality controls](docs/gallery.png)
@@ -149,28 +149,28 @@ everywhere, forever. 👋
 
 <table>
   <tr>
-    <td align="center"><img src="docs/faces/James.webp" width="150"><br><sub>James</sub></td>
-    <td align="center"><img src="docs/faces/Mary.webp" width="150"><br><sub>Mary</sub></td>
-    <td align="center"><img src="docs/faces/Michael.webp" width="150"><br><sub>Michael</sub></td>
-    <td align="center"><img src="docs/faces/Jennifer.webp" width="150"><br><sub>Jennifer</sub></td>
+    <td align="center"><img src="docs/faces/James.webp" width="165"><br><sub>James</sub></td>
+    <td align="center"><img src="docs/faces/Mary.webp" width="165"><br><sub>Mary</sub></td>
+    <td align="center"><img src="docs/faces/Michael.webp" width="165"><br><sub>Michael</sub></td>
+    <td align="center"><img src="docs/faces/Jennifer.webp" width="165"><br><sub>Jennifer</sub></td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/faces/William.webp" width="150"><br><sub>William</sub></td>
-    <td align="center"><img src="docs/faces/Elizabeth.webp" width="150"><br><sub>Elizabeth</sub></td>
-    <td align="center"><img src="docs/faces/David.webp" width="150"><br><sub>David</sub></td>
-    <td align="center"><img src="docs/faces/Sarah.webp" width="150"><br><sub>Sarah</sub></td>
+    <td align="center"><img src="docs/faces/William.webp" width="165"><br><sub>William</sub></td>
+    <td align="center"><img src="docs/faces/Elizabeth.webp" width="165"><br><sub>Elizabeth</sub></td>
+    <td align="center"><img src="docs/faces/David.webp" width="165"><br><sub>David</sub></td>
+    <td align="center"><img src="docs/faces/Sarah.webp" width="165"><br><sub>Sarah</sub></td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/faces/John.webp" width="150"><br><sub>John</sub></td>
-    <td align="center"><img src="docs/faces/Jessica.webp" width="150"><br><sub>Jessica</sub></td>
-    <td align="center"><img src="docs/faces/Robert.webp" width="150"><br><sub>Robert</sub></td>
-    <td align="center"><img src="docs/faces/Emily.webp" width="150"><br><sub>Emily</sub></td>
+    <td align="center"><img src="docs/faces/John.webp" width="165"><br><sub>John</sub></td>
+    <td align="center"><img src="docs/faces/Jessica.webp" width="165"><br><sub>Jessica</sub></td>
+    <td align="center"><img src="docs/faces/Robert.webp" width="165"><br><sub>Robert</sub></td>
+    <td align="center"><img src="docs/faces/Emily.webp" width="165"><br><sub>Emily</sub></td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/faces/Joseph.webp" width="150"><br><sub>Joseph</sub></td>
-    <td align="center"><img src="docs/faces/Emma.webp" width="150"><br><sub>Emma</sub></td>
-    <td align="center"><img src="docs/faces/Daniel.webp" width="150"><br><sub>Daniel</sub></td>
-    <td align="center"><img src="docs/faces/Olivia.webp" width="150"><br><sub>Olivia</sub></td>
+    <td align="center"><img src="docs/faces/Joseph.webp" width="165"><br><sub>Joseph</sub></td>
+    <td align="center"><img src="docs/faces/Emma.webp" width="165"><br><sub>Emma</sub></td>
+    <td align="center"><img src="docs/faces/Daniel.webp" width="165"><br><sub>Daniel</sub></td>
+    <td align="center"><img src="docs/faces/Olivia.webp" width="165"><br><sub>Olivia</sub></td>
   </tr>
 </table>
 
