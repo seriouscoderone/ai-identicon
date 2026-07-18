@@ -9,6 +9,10 @@ pretending to be human.
 
 Same seed → same avatar, **forever**, under a given generation version.
 
+<p align="center">
+  <img src="docs/hero.webp" width="340" alt="A presence orb idling — breathing, glowing, gently turning">
+</p>
+
 ![The ai-identicon gallery — a live "presence orb" at idle, with the full genome and personality controls](docs/gallery.png)
 
 ```python
@@ -138,34 +142,35 @@ verifiable identifier (e.g. show the full AID/prefix where trust matters).
 
 ## Meet some of the faces
 
-Sixteen names, sixteen seeds, sixteen agents you'd know on sight. Each one is
-just `Genome.from_seed(name)` rendered as a color portrait — deterministic, so
-"James" always looks like *James*, everywhere, forever. 👋
+Sixteen names, sixteen seeds, sixteen agents you'd know on sight — each one
+idling below: breathing, glowing, gently turning. All just
+`Genome.from_seed(name)`, deterministic, so "James" always looks like *James*,
+everywhere, forever. 👋
 
 <table>
   <tr>
-    <td align="center"><img src="docs/faces/James.png" width="150"><br><sub>James</sub></td>
-    <td align="center"><img src="docs/faces/Mary.png" width="150"><br><sub>Mary</sub></td>
-    <td align="center"><img src="docs/faces/Michael.png" width="150"><br><sub>Michael</sub></td>
-    <td align="center"><img src="docs/faces/Jennifer.png" width="150"><br><sub>Jennifer</sub></td>
+    <td align="center"><img src="docs/faces/James.webp" width="150"><br><sub>James</sub></td>
+    <td align="center"><img src="docs/faces/Mary.webp" width="150"><br><sub>Mary</sub></td>
+    <td align="center"><img src="docs/faces/Michael.webp" width="150"><br><sub>Michael</sub></td>
+    <td align="center"><img src="docs/faces/Jennifer.webp" width="150"><br><sub>Jennifer</sub></td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/faces/William.png" width="150"><br><sub>William</sub></td>
-    <td align="center"><img src="docs/faces/Elizabeth.png" width="150"><br><sub>Elizabeth</sub></td>
-    <td align="center"><img src="docs/faces/David.png" width="150"><br><sub>David</sub></td>
-    <td align="center"><img src="docs/faces/Sarah.png" width="150"><br><sub>Sarah</sub></td>
+    <td align="center"><img src="docs/faces/William.webp" width="150"><br><sub>William</sub></td>
+    <td align="center"><img src="docs/faces/Elizabeth.webp" width="150"><br><sub>Elizabeth</sub></td>
+    <td align="center"><img src="docs/faces/David.webp" width="150"><br><sub>David</sub></td>
+    <td align="center"><img src="docs/faces/Sarah.webp" width="150"><br><sub>Sarah</sub></td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/faces/John.png" width="150"><br><sub>John</sub></td>
-    <td align="center"><img src="docs/faces/Jessica.png" width="150"><br><sub>Jessica</sub></td>
-    <td align="center"><img src="docs/faces/Robert.png" width="150"><br><sub>Robert</sub></td>
-    <td align="center"><img src="docs/faces/Emily.png" width="150"><br><sub>Emily</sub></td>
+    <td align="center"><img src="docs/faces/John.webp" width="150"><br><sub>John</sub></td>
+    <td align="center"><img src="docs/faces/Jessica.webp" width="150"><br><sub>Jessica</sub></td>
+    <td align="center"><img src="docs/faces/Robert.webp" width="150"><br><sub>Robert</sub></td>
+    <td align="center"><img src="docs/faces/Emily.webp" width="150"><br><sub>Emily</sub></td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/faces/Joseph.png" width="150"><br><sub>Joseph</sub></td>
-    <td align="center"><img src="docs/faces/Emma.png" width="150"><br><sub>Emma</sub></td>
-    <td align="center"><img src="docs/faces/Daniel.png" width="150"><br><sub>Daniel</sub></td>
-    <td align="center"><img src="docs/faces/Olivia.png" width="150"><br><sub>Olivia</sub></td>
+    <td align="center"><img src="docs/faces/Joseph.webp" width="150"><br><sub>Joseph</sub></td>
+    <td align="center"><img src="docs/faces/Emma.webp" width="150"><br><sub>Emma</sub></td>
+    <td align="center"><img src="docs/faces/Daniel.webp" width="150"><br><sub>Daniel</sub></td>
+    <td align="center"><img src="docs/faces/Olivia.webp" width="150"><br><sub>Olivia</sub></td>
   </tr>
 </table>
 
