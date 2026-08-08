@@ -70,10 +70,12 @@ Walk them in this order:
    surface fragments while it works — then pulls back together."
 4. **speaking** — *[VO]* "Speaking draws its voice as a waveform around it."
    *(if you'll do the mic bit, mention it here)*
-5. **notify** — *[VO]* "A notification is a quick chirp and an excited little
+5. **streaming** — *[VO]* "And when it's writing to you rather than talking, a
+   bright point laps its edge — text arriving, fast."
+6. **notify** — *[VO]* "A notification is a quick chirp and an excited little
    spin…" *(it returns to idle on its own)*
-6. **success** — *[VO]* "…success, a warm pulse…"
-7. **error** — *[VO]* "…and an error makes it seize up and flush amber."
+7. **success** — *[VO]* "…success, a warm pulse…"
+8. **error** — *[VO]* "…and an error makes it seize up and flush amber."
 
 **[VO] (closing the section)**
 > None of this is a face. It reads as *presence* — attention, thought, voice —

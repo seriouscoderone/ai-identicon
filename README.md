@@ -33,8 +33,8 @@ open("alice-line.svg", "w").write(line_art_svg(g, "white"))  # line-art, for dar
   categorical materials (the lesson from jazzicons/blockies) so two seeds are
   either clearly the same or clearly different — not a subtle blur.
 - **Alive, but calm.** A headless state model (`idle / listening / thinking /
-  speaking / notify / success / error`) with gaze choreography, breathing,
-  blinks, and shard micro-physics. Present without being noisy; never
+  speaking / streaming / notify / success / error`) with gaze choreography,
+  breathing, blinks, and shard micro-physics. Present without being noisy; never
   interrupts.
 - **Zero-dependency core.** `genome`, `geometry`, `model`, `portrait`,
   `controller` are pure Python. SVG portraits need nothing. The live animated
@@ -43,7 +43,7 @@ open("alice-line.svg", "w").write(line_art_svg(g, "white"))  # line-art, for dar
 ## The states
 
 The orb expresses what an agent is doing through motion and light — never a
-face. One seed (`bmev5p5akc`), all seven states:
+face. One seed (`bmev5p5akc`), all eight states:
 
 <table>
   <tr>
@@ -53,12 +53,16 @@ face. One seed (`bmev5p5akc`), all seven states:
     <td align="center"><img src="docs/states/speaking.png" width="190"><br><b>speaking</b><br><sub>voice drawn as a waveform around it</sub></td>
   </tr>
   <tr>
+    <td align="center"><img src="docs/states/streaming.png" width="190"><br><b>streaming</b><br><sub>text arriving; a bright point laps its edge</sub></td>
     <td align="center"><img src="docs/states/notify.png" width="190"><br><b>notify</b><br><sub>a chirp and an excited spin; self‑returns</sub></td>
     <td align="center"><img src="docs/states/success.png" width="190"><br><b>success</b><br><sub>a warm pulse and spin‑up; self‑returns</sub></td>
     <td align="center"><img src="docs/states/error.png" width="190"><br><b>error</b><br><sub>seized: rotation frozen, amber, one flinch</sub></td>
-    <td align="center"><sub>notify / success / error are transient —<br>they play out and settle back to idle.</sub></td>
   </tr>
 </table>
+
+<sub><b>speaking</b> is voice, <b>streaming</b> is text tokens landing — the two
+output channels. notify / success / error are transient: they play out and
+settle back to idle on their own.</sub>
 
 ## Install
 

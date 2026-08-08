@@ -5,6 +5,30 @@ to [Semantic Versioning](https://semver.org). The package version is
 independent of `ALGO_VERSION` (the frozen avatar-generation contract): a
 package release never changes an existing seed's avatar.
 
+## [0.8.0] — 2026-08-08
+
+- **⚠️ `"streaming"` now means text, not voice.** The published lifecycle event
+  `"streaming"` mapped to `SPEAKING`; it now maps to the new
+  `AvatarState.STREAMING`. Callers emitting it for TTS audio should emit
+  `"speaking"` — or the new `"tts"` / `"voice"` synonyms. `"typing"` and
+  `"tokens"` are added as streaming synonyms.
+- **New state: `streaming`** — text tokens landing, the primary output channel
+  of a text-first assistant. Drawn as a single glowing comet lapping the orb at
+  speed, deliberately not speech's waveform. No blink and no sound cue: it is a
+  working state, and a chirp on every response would grate.
+- **The renderer is now scalar-driven.** `trace_mix` split into `ripple_mix` /
+  `wave_mix` / `comet_mix` — one channel per ring mark — so `widget.py` holds no
+  state-identity branches and per-state visual config lives only in
+  `STATE_TARGETS`. Marks now cross-fade between states instead of popping.
+- **Coverage guards** over `STATE_TARGETS`, `EVENT_STATES` and `TRANSIENT`:
+  adding a state without wiring it is now a test failure rather than a runtime
+  `KeyError`.
+- **State stills are generated**, not hand-captured
+  (`scripts/render_state_stills.py`); all eight are regenerated.
+
+Genome derivation and `ALGO_VERSION 1` are unchanged, and the golden SVG hashes
+are untouched — no existing seed's avatar moves.
+
 ## [0.7.0] — 2026-07-18
 
 - **Breathing is now the aura, not the shape.** The crystal holds its size;
