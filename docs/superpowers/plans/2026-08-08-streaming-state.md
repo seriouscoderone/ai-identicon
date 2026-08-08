@@ -904,7 +904,7 @@ SAMPLE_AT = {
     AvatarState.STREAMING: 1.2,
     AvatarState.NOTIFY: 0.30,
     AvatarState.SUCCESS: 0.28,
-    AvatarState.ERROR: 0.22,
+    AvatarState.ERROR: 0.10,   # 0.22 lands on a zero-crossing of the shake sine
 }
 
 
