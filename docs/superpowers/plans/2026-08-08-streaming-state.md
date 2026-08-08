@@ -315,19 +315,55 @@ Removes both state-identity branches from the renderer. Behaviour-preserving in 
 
 - [ ] **Step 1: Write the failing invariant test**
 
-Append to `tests/test_state_coverage.py` (and add `import re` plus `from pathlib import Path` and `import ai_identicon` to the imports at the top):
+Append to `tests/test_state_coverage.py` (and add `import ast` plus `from pathlib import Path` and `import ai_identicon` to the imports at the top).
+
+Parse `widget.py` as an AST rather than matching operator spellings with a
+regex. A regex has to enumerate every way a comparison can be written and
+still misses reversed operands (`AvatarState.X == m.state`) and a
+locally-aliased variable (`state = m.state; if state == AvatarState.X`) —
+and it misses `is`, which is the idiomatic enum comparison and therefore the
+likeliest future violation. Keying on "does this comparison mention an
+`AvatarState` member at all" is operand-order- and alias-proof by
+construction. Parsing the source text still never imports the module, so the
+test stays Qt-free.
 
 ```python
 WIDGET_SRC = Path(ai_identicon.__file__).parent / "widget.py"
 
 
+def _refs_state_member(node: ast.AST) -> bool:
+    """True if `node` is (or literally contains) an `AvatarState.MEMBER` name."""
+    if isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name) \
+            and node.value.id == "AvatarState":
+        return True
+    if isinstance(node, (ast.Tuple, ast.List, ast.Set)):  # `m.state in (A, B)`
+        return any(_refs_state_member(elt) for elt in node.elts)
+    if isinstance(node, ast.MatchValue):  # `case AvatarState.X:`
+        return _refs_state_member(node.value)
+    if isinstance(node, ast.MatchOr):  # `case AvatarState.X | AvatarState.Y:`
+        return any(_refs_state_member(p) for p in node.patterns)
+    return False
+
+
 def test_renderer_is_scalar_driven():
     """The renderer must never ask WHICH state it is in — only how much of each
-    mark to draw. Reads widget.py as text so this runs without PySide6."""
-    hits = [ln for ln in WIDGET_SRC.read_text().splitlines()
-            if re.search(r"\.state\s*(?:==|!=|\bin\b)", ln)]
-    assert not hits, "state-identity branch in the renderer:\n" + "\n".join(hits)
+    mark to draw."""
+    tree = ast.parse(WIDGET_SRC.read_text())
+    hits = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Compare):
+            operands = (node.left, *node.comparators)
+            if any(_refs_state_member(o) for o in operands):
+                hits.append(ast.unparse(node))
+        elif isinstance(node, ast.match_case):
+            if _refs_state_member(node.pattern):
+                hits.append(f"case {ast.unparse(node.pattern)}:")
+    assert not hits, "state-identity branch(es) in the renderer:\n" + "\n".join(hits)
 ```
+
+It must catch `m.state == X`, `m.state is X`, `X == m.state`, and the aliased
+form — and must NOT fire on `return self.model.state` (the property getter) or
+on `def set_state(self, state: AvatarState)` annotations.
 
 - [ ] **Step 2: Run it to verify it fails, and capture the baseline**
 
