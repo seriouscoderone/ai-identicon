@@ -44,7 +44,7 @@ _THINKING_CAPTION = {
 
 
 class Demo(QWidget):
-    def __init__(self):
+    def __init__(self, seed: str = "bmev5p5akc"):
         super().__init__()
         self.setWindowTitle("ai-identicon — avatar gallery")
         self.resize(980, 660)
@@ -56,7 +56,7 @@ class Demo(QWidget):
             "border-radius:6px;padding:6px 10px;} QPushButton:hover{background:#24303d;}"
             "QPushButton:checked{background:#2d4256;border-color:#4a6a86;}")
 
-        self._seed = "bmev5p5akc"
+        self._seed = seed
         self._sounds = SoundBank(enabled=True)
         self.orb = PresenceWidget(self._build_genome(), sounds=self._sounds)
         self.caption = QLabel()
@@ -292,7 +292,8 @@ class Demo(QWidget):
 
 def main() -> int:
     app = QApplication(sys.argv)
-    Demo().show()
+    seed = sys.argv[1] if len(sys.argv) > 1 else "bmev5p5akc"   # optional seed arg
+    Demo(seed).show()
     return app.exec()
 
 
