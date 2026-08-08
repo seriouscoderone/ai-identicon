@@ -6,6 +6,11 @@ events ("thinking", "streaming", "done", ...) and audio, and the controller
 translates them into AvatarModel calls. Swap the sink (a headless model or the
 live widget) without touching the event source.
 
+Note the two output states: "speaking" is voice (a waveform), "streaming" is
+text tokens landing (an orbiting comet). "streaming" mapped to SPEAKING before
+0.8.0; callers emitting it for TTS audio should now emit "speaking" (or the
+"tts"/"voice" synonyms).
+
 The sink is anything with `set_state` / `set_amplitude` / `set_spectrum`
 (an AvatarModel or a PresenceWidget). Pure Python — no Qt.
 """
@@ -28,7 +33,11 @@ EVENT_STATES = {
     "tool_call": AvatarState.THINKING,
     "working": AvatarState.THINKING,
     "speaking": AvatarState.SPEAKING,
-    "streaming": AvatarState.SPEAKING,
+    "tts": AvatarState.SPEAKING,
+    "voice": AvatarState.SPEAKING,
+    "streaming": AvatarState.STREAMING,
+    "typing": AvatarState.STREAMING,
+    "tokens": AvatarState.STREAMING,
     "notify": AvatarState.NOTIFY,
     "attention": AvatarState.NOTIFY,
     "done": AvatarState.SUCCESS,
@@ -84,6 +93,9 @@ class AvatarController:
 
     def speaking(self):
         return self.event("speaking")
+
+    def streaming(self):
+        return self.event("streaming")
 
     def notify(self):
         return self.event("notify")

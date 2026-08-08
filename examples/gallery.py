@@ -31,6 +31,7 @@ _CAPTION = {
     AvatarState.IDLE: "idle — at rest in its own stance, breathing; blinks now and then",
     AvatarState.LISTENING: "listening — turned to face you; ripples drift in like arriving sound",
     AvatarState.SPEAKING: "speaking — facing you, its voice drawn as a waveform around it",
+    AvatarState.STREAMING: "streaming — text arriving; a bright point laps its edge, fast",
     AvatarState.NOTIFY: "notify — a chirp and an excited little spin; returns by itself",
     AvatarState.SUCCESS: "success — a warm pulse and spin-up; returns by itself",
     AvatarState.ERROR: "error — seized: rotation frozen, amber, one flinch",

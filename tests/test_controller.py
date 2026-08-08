@@ -16,7 +16,7 @@ def _ctl():
 def test_events_map_to_expected_states():
     c = _ctl()
     assert c.event("thinking") == AvatarState.THINKING
-    assert c.event("streaming") == AvatarState.SPEAKING
+    assert c.event("streaming") == AvatarState.STREAMING
     assert c.event("done") == AvatarState.SUCCESS
     assert c.event("failed") == AvatarState.ERROR
     assert c._sink.state == AvatarState.ERROR
@@ -26,6 +26,8 @@ def test_synonyms_share_states():
     c = _ctl()
     assert EVENT_STATES["generating"] == EVENT_STATES["tool_call"] == AvatarState.THINKING
     assert EVENT_STATES["recording"] == EVENT_STATES["listening"] == AvatarState.LISTENING
+    assert EVENT_STATES["typing"] == EVENT_STATES["tokens"] == AvatarState.STREAMING
+    assert EVENT_STATES["tts"] == EVENT_STATES["voice"] == AvatarState.SPEAKING
 
 
 def test_unknown_event_raises():
