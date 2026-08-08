@@ -100,11 +100,33 @@ class Demo(QWidget):
         ctl.addWidget(copy)
         ctl.addWidget(save)
 
+        # size — scale the whole live animation, to judge how the avatar sits
+        # embedded elsewhere: a 40px chat-list avatar vs a 400px hero
+        size_row = QHBoxLayout()
+        self.size_slider = QSlider(Qt.Horizontal)
+        self.size_slider.setRange(32, 480)
+        self.size_slider.setValue(360)
+        self.size_slider.valueChanged.connect(self._apply_size)
+        self.size_label = QLabel("360 px")
+        self.size_label.setFixedWidth(52)
+        size_row.addWidget(QLabel("Size"))
+        size_row.addWidget(self.size_slider)
+        size_row.addWidget(self.size_label)
+
+        orb_wrap = QWidget()  # keeps the orb centred as it grows and shrinks
+        wrap = QHBoxLayout(orb_wrap)
+        wrap.setContentsMargins(0, 0, 0, 0)
+        wrap.addStretch()
+        wrap.addWidget(self.orb, 0, Qt.AlignCenter)
+        wrap.addStretch()
+
         left = QVBoxLayout()
-        left.addWidget(self.orb, 1)
+        left.addWidget(orb_wrap, 1)
         left.addWidget(self.caption)
+        left.addLayout(size_row)
         left.addLayout(state_row)
         left.addLayout(ctl)
+        self._apply_size()
 
         # genome panel
         form = QFormLayout()
@@ -241,6 +263,14 @@ class Demo(QWidget):
             b.setChecked(False)
         self.orb.set_preview(None)
         self.orb.set_state(state)
+
+    def _apply_size(self):
+        """Scale the whole live animation. Everything the widget draws keys off
+        min(w, h), so this shows the avatar at real embed sizes — note that
+        stroke weights are absolute pixels, so ink reads heavier when small."""
+        n = self.size_slider.value()
+        self.orb.setFixedSize(n, n)   # overrides the widget's 220px minimum
+        self.size_label.setText(f"{n} px")
 
     def _toggle_view(self, mode: str):
         if self._view_btns[mode].isChecked():
