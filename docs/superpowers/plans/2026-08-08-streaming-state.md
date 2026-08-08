@@ -664,8 +664,10 @@ def test_streaming_comet_moves():
 
 
 @pytest.mark.parametrize("size", [40, 120, 480])
-def test_streaming_renders_at_every_embed_size(size):
-    assert len(_frame(AvatarState.STREAMING, size=size)) > 0
+def test_streaming_comet_draws_at_every_embed_size(size):
+    # the comet is authored in r-units, so at EVERY embed size it must put light
+    # on screen that idle does not — a render that merely completes is not enough
+    assert _frame(AvatarState.STREAMING, size=size) != _frame(AvatarState.IDLE, size=size)
 ```
 
 - [ ] **Step 2: Run it to verify it fails**
