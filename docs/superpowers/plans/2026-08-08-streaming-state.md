@@ -228,11 +228,12 @@ from PySide6.QtWidgets import QApplication
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 from ai_identicon.genome import Genome              # noqa: E402
-from ai_identicon.model import AvatarState          # noqa: E402
+from ai_identicon.model import AvatarState, TRANSIENT  # noqa: E402
 from ai_identicon.widget import PresenceWidget      # noqa: E402
 
 SEEDS = ("bmev5p5akc", "James")   # two materials, two personalities
-SAMPLES = (0.75, 1.5, 3.0)        # seconds after entering the state
+HOLDING_SAMPLES = (0.75, 1.5, 3.0)   # seconds after entering a holding state
+TRANSIENT_FRACS = (0.2, 0.5, 0.85)   # fractions of a transient's own duration
 SIZE = 240
 DT = 1 / 60
 
@@ -243,9 +244,14 @@ def state_hash(seed: str, state: AvatarState) -> str:
     w.setFixedSize(SIZE, SIZE)
     w.model.next_blink = 1e9      # blinks are RNG-scheduled; freeze them out
     w.set_state(state)
+    # Transient states auto-return to idle partway through a fixed window, so
+    # sample them at fractions of their OWN duration — otherwise notify and
+    # success mostly hash idle-settling frames instead of their real look.
+    samples = ([TRANSIENT[state] * f for f in TRANSIENT_FRACS]
+               if state in TRANSIENT else HOLDING_SAMPLES)
     digest = hashlib.sha256()
     t = 0.0
-    for sample in SAMPLES:
+    for sample in samples:
         while t < sample - 1e-9:
             w.model.advance(DT)
             t += DT
