@@ -12,7 +12,7 @@ job like everything else here.
 
 from __future__ import annotations
 
-import re
+import ast
 from pathlib import Path
 
 import pytest
@@ -90,9 +90,42 @@ def test_every_channel_eases_home_after_leaving(state):
 WIDGET_SRC = Path(ai_identicon.__file__).parent / "widget.py"
 
 
+def _refs_state_member(node: ast.AST) -> bool:
+    """True if `node` is (or literally contains) an `AvatarState.MEMBER` name.
+
+    A regex over operator spellings ("==", "is", ...) has to enumerate every
+    way a comparison can be written and still misses reversed operands or a
+    locally-aliased variable (`state = m.state; if state == AvatarState.X`).
+    Keying on "does this expression mention an AvatarState member at all" is
+    operand-order- and alias-proof by construction: it doesn't matter what the
+    *other* side of the comparison is spelled as.
+    """
+    if isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name) \
+            and node.value.id == "AvatarState":
+        return True
+    if isinstance(node, (ast.Tuple, ast.List, ast.Set)):  # `m.state in (A, B)`
+        return any(_refs_state_member(elt) for elt in node.elts)
+    if isinstance(node, ast.MatchValue):  # `case AvatarState.X:`
+        return _refs_state_member(node.value)
+    if isinstance(node, ast.MatchOr):  # `case AvatarState.X | AvatarState.Y:`
+        return any(_refs_state_member(p) for p in node.patterns)
+    return False
+
+
 def test_renderer_is_scalar_driven():
     """The renderer must never ask WHICH state it is in — only how much of each
-    mark to draw. Reads widget.py as text so this runs without PySide6."""
-    hits = [ln for ln in WIDGET_SRC.read_text().splitlines()
-            if re.search(r"\.state\s*(?:==|!=|\bin\b)", ln)]
-    assert not hits, "state-identity branch in the renderer:\n" + "\n".join(hits)
+    mark to draw. Parses widget.py as an AST (never imports it, so this runs
+    without PySide6) and flags any comparison or match/case pattern that
+    mentions an AvatarState member — catching `==`, `!=`, `is`, `is not`,
+    `in`, reversed operand order, and aliasing, not just one spelling."""
+    tree = ast.parse(WIDGET_SRC.read_text())
+    hits = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Compare):
+            operands = (node.left, *node.comparators)
+            if any(_refs_state_member(o) for o in operands):
+                hits.append(ast.unparse(node))
+        elif isinstance(node, ast.match_case):
+            if _refs_state_member(node.pattern):
+                hits.append(f"case {ast.unparse(node.pattern)}:")
+    assert not hits, "state-identity branch(es) in the renderer:\n" + "\n".join(hits)
