@@ -12,8 +12,12 @@ job like everything else here.
 
 from __future__ import annotations
 
+import re
+from pathlib import Path
+
 import pytest
 
+import ai_identicon
 from ai_identicon.controller import EVENT_STATES
 from ai_identicon.genome import Genome
 from ai_identicon.model import STATE_TARGETS, TRANSIENT, AvatarModel, AvatarState
@@ -81,3 +85,14 @@ def test_every_channel_eases_home_after_leaving(state):
     for _ in range(int(3.0 / DT)):
         m.advance(DT)
     _assert_converged(m, STATE_TARGETS[AvatarState.IDLE], f"{state.name}->idle")
+
+
+WIDGET_SRC = Path(ai_identicon.__file__).parent / "widget.py"
+
+
+def test_renderer_is_scalar_driven():
+    """The renderer must never ask WHICH state it is in — only how much of each
+    mark to draw. Reads widget.py as text so this runs without PySide6."""
+    hits = [ln for ln in WIDGET_SRC.read_text().splitlines()
+            if re.search(r"\.state\s*(?:==|!=|\bin\b)", ln)]
+    assert not hits, "state-identity branch in the renderer:\n" + "\n".join(hits)

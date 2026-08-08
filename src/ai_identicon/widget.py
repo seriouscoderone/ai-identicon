@@ -316,7 +316,7 @@ class PresenceWidget(QWidget):
         disp = _lerp_rgb(m.palette[0], tint, tint_mix)
         blink = m.blink()
         bloom = m.bloom()
-        env = m.speech_env() if m.state == AvatarState.SPEAKING else 0.0
+        env = m.speech_env() * m.cur["wave_mix"]
 
         p.setPen(Qt.NoPen)
         p.setCompositionMode(QPainter.CompositionMode_Plus)
@@ -416,25 +416,25 @@ class PresenceWidget(QWidget):
                 p.restore()
             p.setBrush(Qt.NoBrush)
 
-        # ---- the ring: a clean circle enclosing the cluster; listening shows
-        # inward ripples, speaking shows a circular audio waveform
-        trace = m.cur["trace_mix"]
-        if trace > 0.02 and hull_pts:
+        # Each ring mark has its own smoothed channel, so the renderer never
+        # asks which state it is in — and marks cross-fade instead of popping.
+        ripple, wave = m.cur["ripple_mix"], m.cur["wave_mix"]
+        if max(ripple, wave) > 0.02 and hull_pts:
             target_r = max(math.hypot(qx - cx, qy - cy) for qx, qy in hull_pts) + r * 0.30
             if self._ring_r <= 1.0:
                 self._ring_r = target_r
             self._ring_r += (target_r - self._ring_r) * 0.06  # calm, no jitter
             ring = self._ring_r
 
-            if m.state == AvatarState.SPEAKING:
-                self._draw_speaking_wave(p, cx, cy, ring, r, disp, trace, env, k_t, k_e, g)
-            else:
-                base_pen = QPen(QColor(*disp, int(45 * trace)))
+            if wave > 0.02:
+                self._draw_speaking_wave(p, cx, cy, ring, r, disp, wave, env, k_t, k_e, g)
+            if ripple > 0.02:
+                base_pen = QPen(QColor(*disp, int(45 * ripple)))
                 base_pen.setWidthF(1.2)
                 p.setPen(base_pen)
                 p.setBrush(Qt.NoBrush)
                 p.drawEllipse(QPointF(cx, cy), ring, ring)
-                self._draw_trace_activity(p, cx, cy, ring, disp, trace, k_t)
+                self._draw_trace_activity(p, cx, cy, ring, disp, ripple, k_t)
             p.setPen(Qt.NoPen)
 
         self._paint_orbiter(p, cx, cy, r, disp, think, k_t, g, placed)
