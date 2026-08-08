@@ -40,16 +40,17 @@ class AvatarState(Enum):
 #   scale/glow/core_dim  size, halo, facet brightness
 #   spin           tumble-rate multiplier (cognitive activity)
 #   think_mix      gate the thinking effect
-#   ripple_mix/wave_mix  the ring instruments: listening's circle + inward
-#                  ripples, and speaking's waveform. Each mark has its own
-#                  channel so the renderer never branches on state identity.
+#   ripple_mix/wave_mix/comet_mix  the three ring instruments: listening's
+#                  circle + inward ripples, speaking's waveform, streaming's
+#                  orbiting comet. One channel per mark, so the renderer never
+#                  branches on state identity.
 #   face_mix       0 = free spin, 1 = yaw locked to the gaze target
 #   gaze_yaw/gaze_pitch  where to face when locked (0,0 = front, at the user)
 STATE_TARGETS = {
-    AvatarState.IDLE: dict(tint=(255, 255, 255), tint_mix=0.0, scale=1.00, glow=1.00, core_dim=1.00, spin=1.0, think_mix=0.0, ripple_mix=0.0, wave_mix=0.0, face_mix=0.0, gaze_yaw=0.0, gaze_pitch=0.0),
-    AvatarState.LISTENING: dict(tint=(120, 210, 255), tint_mix=0.10, scale=1.10, glow=1.30, core_dim=1.06, spin=0.7, think_mix=0.0, ripple_mix=1.0, wave_mix=0.0, face_mix=1.0, gaze_yaw=0.0, gaze_pitch=0.0),
-    AvatarState.THINKING: dict(tint=(150, 120, 250), tint_mix=0.40, scale=0.94, glow=0.90, core_dim=0.78, spin=1.0, think_mix=1.0, ripple_mix=0.0, wave_mix=0.0, face_mix=1.0, gaze_yaw=0.35, gaze_pitch=0.22),
-    AvatarState.SPEAKING: dict(tint=(255, 255, 255), tint_mix=0.0, scale=1.02, glow=1.15, core_dim=1.04, spin=1.3, think_mix=0.0, ripple_mix=0.0, wave_mix=1.0, face_mix=1.0, gaze_yaw=0.0, gaze_pitch=0.0),
+    AvatarState.IDLE: dict(tint=(255, 255, 255), tint_mix=0.0, scale=1.00, glow=1.00, core_dim=1.00, spin=1.0, think_mix=0.0, ripple_mix=0.0, wave_mix=0.0, comet_mix=0.0, face_mix=0.0, gaze_yaw=0.0, gaze_pitch=0.0),
+    AvatarState.LISTENING: dict(tint=(120, 210, 255), tint_mix=0.10, scale=1.10, glow=1.30, core_dim=1.06, spin=0.7, think_mix=0.0, ripple_mix=1.0, wave_mix=0.0, comet_mix=0.0, face_mix=1.0, gaze_yaw=0.0, gaze_pitch=0.0),
+    AvatarState.THINKING: dict(tint=(150, 120, 250), tint_mix=0.40, scale=0.94, glow=0.90, core_dim=0.78, spin=1.0, think_mix=1.0, ripple_mix=0.0, wave_mix=0.0, comet_mix=0.0, face_mix=1.0, gaze_yaw=0.35, gaze_pitch=0.22),
+    AvatarState.SPEAKING: dict(tint=(255, 255, 255), tint_mix=0.0, scale=1.02, glow=1.15, core_dim=1.04, spin=1.3, think_mix=0.0, ripple_mix=0.0, wave_mix=1.0, comet_mix=0.0, face_mix=1.0, gaze_yaw=0.0, gaze_pitch=0.0),
     # text tokens landing — the output channel of a text-first assistant.
     # Deliberately NOT speaking's waveform (see the comet in widget.py): tint
     # sits next to listening's so text-arrival and sound-arrival read as one
@@ -57,10 +58,10 @@ STATE_TARGETS = {
     # identity colour at 0.0. No blink and no sound cue, both by omission:
     # the blink whitelist is (IDLE, LISTENING) and cues are set by explicit
     # branches in set_state — a chirp on every response would grate.
-    AvatarState.STREAMING: dict(tint=(150, 200, 255), tint_mix=0.32, scale=1.00, glow=1.05, core_dim=1.02, spin=1.10, think_mix=0.0, ripple_mix=0.0, wave_mix=0.0, face_mix=1.0, gaze_yaw=0.0, gaze_pitch=0.0),
-    AvatarState.NOTIFY: dict(tint=(255, 190, 90), tint_mix=0.85, scale=1.16, glow=1.50, core_dim=1.10, spin=2.0, think_mix=0.0, ripple_mix=0.0, wave_mix=0.0, face_mix=0.0, gaze_yaw=0.0, gaze_pitch=0.0),
-    AvatarState.SUCCESS: dict(tint=(90, 220, 160), tint_mix=0.85, scale=1.08, glow=1.40, core_dim=1.05, spin=1.5, think_mix=0.0, ripple_mix=0.0, wave_mix=0.0, face_mix=0.0, gaze_yaw=0.0, gaze_pitch=0.0),
-    AvatarState.ERROR: dict(tint=(250, 110, 85), tint_mix=0.85, scale=0.95, glow=0.75, core_dim=0.95, spin=0.05, think_mix=0.0, ripple_mix=0.0, wave_mix=0.0, face_mix=0.0, gaze_yaw=0.0, gaze_pitch=0.0),
+    AvatarState.STREAMING: dict(tint=(150, 200, 255), tint_mix=0.32, scale=1.00, glow=1.05, core_dim=1.02, spin=1.10, think_mix=0.0, ripple_mix=0.0, wave_mix=0.0, comet_mix=1.0, face_mix=1.0, gaze_yaw=0.0, gaze_pitch=0.0),
+    AvatarState.NOTIFY: dict(tint=(255, 190, 90), tint_mix=0.85, scale=1.16, glow=1.50, core_dim=1.10, spin=2.0, think_mix=0.0, ripple_mix=0.0, wave_mix=0.0, comet_mix=0.0, face_mix=0.0, gaze_yaw=0.0, gaze_pitch=0.0),
+    AvatarState.SUCCESS: dict(tint=(90, 220, 160), tint_mix=0.85, scale=1.08, glow=1.40, core_dim=1.05, spin=1.5, think_mix=0.0, ripple_mix=0.0, wave_mix=0.0, comet_mix=0.0, face_mix=0.0, gaze_yaw=0.0, gaze_pitch=0.0),
+    AvatarState.ERROR: dict(tint=(250, 110, 85), tint_mix=0.85, scale=0.95, glow=0.75, core_dim=0.95, spin=0.05, think_mix=0.0, ripple_mix=0.0, wave_mix=0.0, comet_mix=0.0, face_mix=0.0, gaze_yaw=0.0, gaze_pitch=0.0),
 }
 
 # Transient states play out and settle back to IDLE on their own; the

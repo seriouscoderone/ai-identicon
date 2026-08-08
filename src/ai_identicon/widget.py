@@ -418,8 +418,8 @@ class PresenceWidget(QWidget):
 
         # Each ring mark has its own smoothed channel, so the renderer never
         # asks which state it is in — and marks cross-fade instead of popping.
-        ripple, wave = m.cur["ripple_mix"], m.cur["wave_mix"]
-        if max(ripple, wave) > 0.02 and hull_pts:
+        ripple, wave, comet = (m.cur[k] for k in ("ripple_mix", "wave_mix", "comet_mix"))
+        if max(ripple, wave, comet) > 0.02 and hull_pts:
             target_r = max(math.hypot(qx - cx, qy - cy) for qx, qy in hull_pts) + r * 0.30
             if self._ring_r <= 1.0:
                 self._ring_r = target_r
@@ -435,6 +435,8 @@ class PresenceWidget(QWidget):
                 p.setBrush(Qt.NoBrush)
                 p.drawEllipse(QPointF(cx, cy), ring, ring)
                 self._draw_trace_activity(p, cx, cy, ring, disp, ripple, k_t)
+            if comet > 0.02:
+                self._draw_stream_comet(p, cx, cy, ring, r, disp, comet, k_t)
             p.setPen(Qt.NoPen)
 
         self._paint_orbiter(p, cx, cy, r, disp, think, k_t, g, placed)
@@ -491,6 +493,47 @@ class PresenceWidget(QWidget):
             pen.setWidthF(1.3)
             p.setPen(pen)
             p.drawEllipse(QPointF(cx, cy), rr, rr)
+
+    def _draw_stream_comet(self, p, cx, cy, ring, r, disp, comet, k_t):
+        """Streaming: one bright dot lapping the (undrawn) ring — text arriving,
+        fast. Deliberately not the speaking waveform: text is not voice.
+
+        The orbit is a FLAT circle at ring radius, which the `orbiter` thinking
+        style (tilted ellipse, closer in, a third the speed, many sparkles) never
+        uses — so the two marks stay legible as different instruments.
+
+        Sized in r-units throughout — the trail spans a fixed arc in radians, the
+        widths and head radius are fractions of r — so unlike the rest of this
+        file the mark keeps its proportions at any embed size (see issue #2).
+        """
+        m = self.model
+        spark = _lerp_rgb(disp, (255, 255, 255), 0.55)
+        head = m.t * math.tau * 0.75 * k_t   # ~0.75 rev/s, scaled by tempo
+
+        def at(tau):
+            return QPointF(cx + ring * math.cos(tau), cy + ring * math.sin(tau))
+
+        n_trail = 16
+        prev = at(head)
+        for k in range(1, n_trail):
+            q = at(head - k * 0.045)
+            fade = 1.0 - k / n_trail
+            pen = QPen(QColor(*spark, int(150 * fade ** 1.7 * comet)))
+            pen.setWidthF(max(0.6, r * 0.055 * fade))
+            p.setPen(pen)
+            p.drawLine(prev, q)
+            prev = q
+        p.setPen(Qt.NoPen)
+
+        hd = at(head)
+        core_r = max(1.5, r * 0.13)
+        core = QRadialGradient(hd, core_r)
+        core.setColorAt(0.0, QColor(255, 255, 255, int(235 * comet)))
+        core.setColorAt(0.45, QColor(*spark, int(160 * comet)))
+        core.setColorAt(1.0, QColor(*spark, 0))
+        p.setBrush(core)
+        p.drawEllipse(hd, core_r, core_r)
+        p.setBrush(Qt.NoBrush)
 
     def _paint_orbiter(self, p, cx, cy, r, disp, think, k_t, g, placed):
         """Thinking "orbiter": a sparkle around every shard plus one around the
