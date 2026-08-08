@@ -70,12 +70,15 @@ def _settled_streaming(seed="bmev5p5akc", size=240, settle_secs=1.0):
 
 # The ambient aura (breath-driven per v0.7.0, plus rasterization/antialiasing
 # of the shard silhouette) leaves faint, angle-dependent noise at the ring
-# radius even with no comet at all — empirically R+G+B sums of 77-81 on this
-# seed/size. The comet's core is near-white at full alpha — empirically 765
-# (max possible) at its brightest sample. PEAK_LUM_FLOOR sits an order of
-# magnitude above the noise ceiling and comfortably below the real peak, so a
-# missing/disabled comet fails on a clear, deterministic "no bright peak"
-# assertion instead of on a coincidental angle that noise happened to produce.
+# radius even with no comet at all — empirically a peak lum of 71 on this
+# seed/size. That noise isn't the real ceiling to clear, though: the brightest
+# competing mark is LISTENING's ripples, which peak at 189 on the same ring.
+# The comet's core is near-white at full alpha — its worst measured sample
+# across embed sizes 40-480 is 346. PEAK_LUM_FLOOR sits above listening's
+# ripples and comfortably below the comet's worst measured peak, so a
+# missing/disabled comet (or a stray ripple/wave mark) fails on a clear,
+# deterministic "no bright peak" assertion instead of on a coincidental angle
+# that noise or another mark happened to produce.
 PEAK_LUM_FLOOR = 250
 
 
@@ -143,6 +146,9 @@ def test_streaming_comet_moves():
 
 @pytest.mark.parametrize("size", [40, 120, 480])
 def test_streaming_comet_draws_at_every_embed_size(size):
-    # the comet is authored in r-units, so at EVERY embed size it must put light
-    # on screen that idle does not — a render that merely completes is not enough
-    assert _frame(AvatarState.STREAMING, size=size) != _frame(AvatarState.IDLE, size=size)
+    # the comet is authored in r-units, so at EVERY embed size it must clear a
+    # real brightness floor on the ring — a whole-frame diff from idle is NOT
+    # enough, since STREAMING's own tint_mix/glow/spin already differ from
+    # idle regardless of whether _draw_stream_comet does anything at all
+    w = _settled_streaming(size=size)
+    assert _peak_ring_angle(w)[1] > PEAK_LUM_FLOOR

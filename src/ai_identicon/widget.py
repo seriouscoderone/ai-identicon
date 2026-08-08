@@ -3,8 +3,9 @@
 This is the only rendering layer that needs Qt. It owns a QTimer that advances
 the (headless) model each frame and paints the result: the shard cluster
 (flat-shaded facets, no wireframe), the state halo and notify rings, the
-thinking treatments (breakup/glow/shimmer/orbiter), and the listening/speaking
-ring. It also hosts the static portrait "preview" (via portrait.py) and plays
+thinking treatments (breakup/glow/shimmer/orbiter), and the three ring
+marks — listening's circle + ripples, speaking's waveform, streaming's comet.
+It also hosts the static portrait "preview" (via portrait.py) and plays
 the model's one-shot sound cues through an optional SoundBank.
 
 Integration surface: set_state(), set_amplitude(), set_spectrum(),
@@ -59,7 +60,7 @@ class PresenceWidget(QWidget):
                       else AvatarModel(genome_or_model))
         self._sounds = sounds
         self.zoom = 1.0           # orb size within the frame (1.0 = default)
-        self._ring_r = 0.0        # smoothed listening/speaking circle radius
+        self._ring_r = 0.0        # smoothed radius shared by all three ring marks
         self._preview: str | None = None
         self._preview_renderers: list = []
         self._preview_quad = 0.0

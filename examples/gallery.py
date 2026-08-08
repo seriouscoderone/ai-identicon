@@ -43,6 +43,12 @@ _THINKING_CAPTION = {
     "orbiter": "thinking (orbiter) — sparks of association circling the pieces",
 }
 
+# THINKING is deliberately routed to _THINKING_CAPTION instead of _CAPTION
+# (see _update_caption), so the coverage check has to account for it too —
+# a 9th state that's missing from both would otherwise KeyError at runtime.
+_missing_captions = set(AvatarState) - (set(_CAPTION) | {AvatarState.THINKING})
+assert not _missing_captions, f"no caption for {sorted(s.name for s in _missing_captions)}"
+
 
 class Demo(QWidget):
     def __init__(self, seed: str = "bmev5p5akc"):

@@ -3,9 +3,11 @@
 
 A refactor meant to leave the picture alone (splitting a scalar, renaming a
 channel) is verified by running this before and after and diffing the output.
-The model is driven with a fixed timestep and sampled at fixed times, and the
-blink schedule and saccades — the seeded-random elements in a frame — are
-frozen, so the hashes depend only on the rendering code.
+The model is driven with a fixed timestep and sampled at fixed times. The
+blink schedule is frozen (`next_blink = 1e9`); saccades are already
+deterministic — seeded from `genome.mesh_seed` — and stay stable here because
+freezing blinks stops anything else from consuming that RNG stream. So the
+hashes depend only on the rendering code.
 
 Needs the Qt extra:  pip install -e ".[qt]"
 Run:                 python scripts/state_render_hashes.py
@@ -42,7 +44,8 @@ def state_hash(seed: str, state: AvatarState) -> str:
     w.set_state(state)
     # For transient states, sample at fractions of their duration; for holding
     # states, use fixed absolute times. This ensures all samples land while the
-    # state's specific visual effects (bloom, trace_mix) are active.
+    # state's specific visual effects (bloom, ripple_mix/wave_mix/comet_mix)
+    # are active.
     if state in TRANSIENT:
         samples = [TRANSIENT[state] * frac for frac in TRANSIENT_FRACS]
     else:

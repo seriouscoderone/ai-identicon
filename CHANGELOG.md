@@ -18,7 +18,7 @@ package release never changes an existing seed's avatar.
   working state, and a chirp on every response would grate.
 - **The renderer is now scalar-driven.** `trace_mix` split into `ripple_mix` /
   `wave_mix` / `comet_mix` — one channel per ring mark — so `widget.py` holds no
-  state-identity branches and per-state visual config lives only in
+  state-identity branches and every ring mark is driven purely by
   `STATE_TARGETS`. Marks now cross-fade between states instead of popping.
 - **Coverage guards** over `STATE_TARGETS`, `EVENT_STATES` and `TRANSIENT`:
   adding a state without wiring it is now a test failure rather than a runtime

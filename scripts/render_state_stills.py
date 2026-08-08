@@ -61,6 +61,8 @@ def render(state: AvatarState, path: str) -> int:
 
 
 def main() -> int:
+    missing = set(AvatarState) - set(SAMPLE_AT)
+    assert not missing, f"no SAMPLE_AT for {sorted(s.name for s in missing)}"
     QApplication(sys.argv[:1])
     out = os.path.join(os.path.dirname(__file__), "..", "docs", "states")
     os.makedirs(out, exist_ok=True)
