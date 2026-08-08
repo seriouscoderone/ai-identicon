@@ -75,7 +75,7 @@ Walk them in this order:
 6. **notify** — *[VO]* "A notification is a quick chirp and an excited little
    spin…" *(it returns to idle on its own)*
 7. **success** — *[VO]* "…success, a warm pulse…"
-8. **error** — *[VO]* "…and an error makes it seize up and flush amber."
+8. **error** — *[VO]* "…and an error makes it seize up and flush red."
 
 **[VO] (closing the section)**
 > None of this is a face. It reads as *presence* — attention, thought, voice —

@@ -488,7 +488,7 @@ class PresenceWidget(QWidget):
         m = self.model
         p.setBrush(Qt.NoBrush)
         for j in range(2):
-            prog = (m.t * 0.35 * k_t + j / 2.0) % 1.0
+            prog = (m.ripple_phase + j / 2.0) % 1.0
             rr = ring * (1.18 - 0.20 * prog)
             pen = QPen(QColor(*disp, int(55 * math.sin(math.pi * prog) * trace)))
             pen.setWidthF(1.3)
@@ -500,8 +500,8 @@ class PresenceWidget(QWidget):
         fast. Deliberately not the speaking waveform: text is not voice.
 
         The orbit is a FLAT circle at ring radius, which the `orbiter` thinking
-        style (tilted ellipse, closer in, a third the speed, many sparkles) never
-        uses — so the two marks stay legible as different instruments.
+        style (tilted ellipse, closer in, a fraction of the speed, many
+        sparkles) never uses — so the two stay legible as different instruments.
 
         Sized in r-units throughout — the trail spans a fixed arc in radians, the
         widths and head radius are fractions of r — so unlike the rest of this
@@ -509,7 +509,7 @@ class PresenceWidget(QWidget):
         """
         m = self.model
         spark = _lerp_rgb(disp, (255, 255, 255), 0.55)
-        head = m.t * math.tau * 0.75 * k_t   # ~0.75 rev/s, scaled by tempo
+        head = m.comet_phase * math.tau   # rate + integration live in the model
 
         def at(tau):
             return QPointF(cx + ring * math.cos(tau), cy + ring * math.sin(tau))
@@ -527,7 +527,7 @@ class PresenceWidget(QWidget):
         p.setPen(Qt.NoPen)
 
         hd = at(head)
-        core_r = max(1.5, r * 0.13)
+        core_r = max(3.0, r * 0.26)
         core = QRadialGradient(hd, core_r)
         core.setColorAt(0.0, QColor(255, 255, 255, int(235 * comet)))
         core.setColorAt(0.45, QColor(*spark, int(160 * comet)))
@@ -563,7 +563,13 @@ class PresenceWidget(QWidget):
                 return ob["cx"] + ox * tc - oy * ts, ob["cy"] + ox * ts + oy * tc
 
             head_tau = m.t * ob["speed"] * k_t + ob["phase"]
-            scale = min(1.0, ob["rx"] / (r * 1.2))
+            scale = min(1.0, ob["rx"] / (r * 1.2))   # which orbit, not what size
+            # `scale` distinguishes the per-shard orbits from the cluster-wide
+            # one; it does NOT track the widget's size. These sparkle sizes were
+            # authored against r ≈ 60px, so without `u` they stay fixed-size and
+            # swamp a small avatar — at 40px the twinkles were bigger than the
+            # shards. Floors keep strokes from disappearing entirely when tiny.
+            u = r / 60.0
 
             prev = None
             n_trail = 18
@@ -572,7 +578,7 @@ class PresenceWidget(QWidget):
                 if prev is not None:
                     fade = 1.0 - k / n_trail
                     pen = QPen(QColor(*spark_rgb, int(140 * fade ** 1.6 * think)))
-                    pen.setWidthF((0.4 + 2.2 * fade) * scale)
+                    pen.setWidthF(max(0.4, (0.4 + 2.2 * fade) * scale * u))
                     p.setPen(pen)
                     p.drawLine(QPointF(*prev), QPointF(*q))
                 prev = q
@@ -583,16 +589,16 @@ class PresenceWidget(QWidget):
                 tw = abs(math.sin(m.t * 9.0 + j * 2.4 + ob["phase"])) * (1.0 - j / 3.5)
                 if tw < 0.15:
                     continue
-                sz = (0.8 + 2.2 * tw) * scale
+                sz = (0.8 + 2.2 * tw) * scale * u
                 pen = QPen(QColor(*spark_rgb, int(180 * tw * think)))
-                pen.setWidthF(1.0)
+                pen.setWidthF(max(0.4, u))
                 p.setPen(pen)
                 p.drawLine(QPointF(qx - sz, qy), QPointF(qx + sz, qy))
                 p.drawLine(QPointF(qx, qy - sz), QPointF(qx, qy + sz))
             p.setPen(Qt.NoPen)
 
             hxp, hyp = orbit_pos(head_tau)
-            core_r = 6.0 * (0.6 + 0.4 * scale)
+            core_r = max(1.2, 6.0 * (0.6 + 0.4 * scale) * u)
             core = QRadialGradient(QPointF(hxp, hyp), core_r)
             core.setColorAt(0.0, QColor(255, 255, 255, int(225 * think)))
             core.setColorAt(0.4, QColor(*spark_rgb, int(150 * think)))
@@ -600,10 +606,10 @@ class PresenceWidget(QWidget):
             p.setBrush(core)
             p.drawEllipse(QPointF(hxp, hyp), core_r, core_r)
             ray = ((4.5 + 2.0 * math.sin(m.t * 7.0 + ob["phase"]))
-                   * (0.8 + 0.5 * k_e) * (0.6 + 0.4 * scale))
+                   * (0.8 + 0.5 * k_e) * (0.6 + 0.4 * scale) * u)
             rot = m.t * 3.0 + ob["phase"]
             pen = QPen(QColor(255, 255, 255, int(190 * think)))
-            pen.setWidthF(1.1)
+            pen.setWidthF(max(0.4, 1.1 * u))
             p.setPen(pen)
             for base_ang in (rot, rot + math.pi / 2):
                 dxr, dyr = math.cos(base_ang) * ray, math.sin(base_ang) * ray

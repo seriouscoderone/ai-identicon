@@ -25,6 +25,18 @@ package release never changes an existing seed's avatar.
   `KeyError`.
 - **State stills are generated**, not hand-captured
   (`scripts/render_state_stills.py`); all eight are regenerated.
+- **The `orbiter` thinking sparkles now scale with the avatar.** Their core,
+  rays, twinkles and trail were absolute pixel sizes, so on a small embed they
+  stayed put while everything else shrank — at a 40px avatar the sparkle core
+  was larger than the shards. They are now proportional to the orb.
+- **Mark phase is integrated in the model**, not derived from absolute time in
+  the renderer (`COMET_RATE` / `RIPPLE_RATE`). `phase = t * rate` jumps the
+  moment a rate changes, because the new rate applies retroactively to all
+  elapsed time; accumulating `phase += rate * dt` is what will let a mark's
+  rate become a smoothed per-state channel, the way its mix weight already is.
+- **`error` is described as red, not amber.** The prose in the README, the demo
+  script and the gallery all called it amber — but `ERROR` is coral
+  `(250, 110, 85)`; `NOTIFY` is the amber one. The pictures were always right.
 
 Genome derivation and `ALGO_VERSION 1` are unchanged, and the golden SVG hashes
 are untouched — no existing seed's avatar moves.

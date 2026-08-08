@@ -135,11 +135,14 @@ def test_streaming_comet_moves():
     # barely moved backwards — bound it well short of a full lap too
     assert lap_frac < 0.95, f"ring peak advance folds to near-zero: {lap_frac:.3f} of a lap"
 
-    # roughly the speed _draw_stream_comet's `head` predicts (0.75 rev/s,
-    # scaled by tempo) — a loose band, wide enough to absorb the ~1 degree
-    # of quantization in a 360-sample angle scan, but tight enough to catch
-    # a speed that is wildly wrong (e.g. off by 2x or more)
-    expected = (0.75 * w.model.k_t * (t_b - t_a)) % 1.0
+    # roughly the speed model.COMET_RATE predicts (1.125 laps/s, scaled by
+    # tempo) — a loose band, wide enough to absorb the ~1 degree of
+    # quantization in a 360-sample angle scan, but tight enough to catch a
+    # speed that is wildly wrong (e.g. off by 2x or more).
+    # The rate is duplicated here on purpose rather than imported: an
+    # ACCIDENTAL change to the comet's speed should fail this test, and a
+    # deliberate one should require saying so in two places.
+    expected = (1.125 * w.model.k_t * (t_b - t_a)) % 1.0
     assert abs(lap_frac - expected) < 0.25, (
         f"comet advanced {lap_frac:.3f} of a lap, expected ~{expected:.3f}")
 

@@ -56,7 +56,7 @@ face. One seed (`bmev5p5akc`), all eight states:
     <td align="center"><img src="docs/states/streaming.png" width="190"><br><b>streaming</b><br><sub>text arriving; a bright point laps its edge</sub></td>
     <td align="center"><img src="docs/states/notify.png" width="190"><br><b>notify</b><br><sub>a chirp and an excited spin; self‑returns</sub></td>
     <td align="center"><img src="docs/states/success.png" width="190"><br><b>success</b><br><sub>a warm pulse and spin‑up; self‑returns</sub></td>
-    <td align="center"><img src="docs/states/error.png" width="190"><br><b>error</b><br><sub>seized: rotation frozen, amber, one flinch</sub></td>
+    <td align="center"><img src="docs/states/error.png" width="190"><br><b>error</b><br><sub>seized: rotation frozen, flushed red, one flinch</sub></td>
   </tr>
 </table>
 

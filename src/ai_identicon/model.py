@@ -71,6 +71,16 @@ TRANSIENT = {AvatarState.NOTIFY: 1.5, AvatarState.SUCCESS: 1.2, AvatarState.ERRO
 _STYLE_SPIN = {"breakup": 1.2, "glow": 0.5, "shimmer": 0.55, "orbiter": 0.5}
 TRACE_SAMPLES = 72
 
+# Ring-mark rates, in laps (or cycles) per second before the personality clock.
+# The MODEL integrates these into a phase instead of the renderer deriving one
+# from absolute time. `phase = t * rate` looks equivalent and is not: the moment
+# a rate changes, that phase JUMPS, because the new rate is applied retroactively
+# to all elapsed time. Accumulating `phase += rate * dt` keeps the mark where it
+# was and merely changes how fast it leaves — which is what lets a rate become a
+# smoothed per-state channel later, the way the mix weights already are.
+COMET_RATE = 1.125   # streaming: laps per second
+RIPPLE_RATE = 0.35   # listening: inward-ripple cycles per second
+
 
 class AvatarModel:
     """Headless animation state for one avatar. Drive with set_state() and
@@ -104,6 +114,8 @@ class AvatarModel:
         self.sac_target = (0.0, 0.0)
         self.next_saccade = 0.0
         self.rings: list[float] = []    # notify-ring birth times (renderer reads)
+        self.comet_phase = 0.0          # streaming comet, in laps (0..1)
+        self.ripple_phase = 0.0         # listening ripples, in cycles (0..1)
 
         self.set_genome(genome)
 
@@ -231,6 +243,11 @@ class AvatarModel:
             self.set_state(AvatarState.IDLE)
 
         k_t = self.k_t
+
+        # integrated mark phases (see COMET_RATE / RIPPLE_RATE) — kept in laps,
+        # 0..1, so the renderer only has to scale them into radians
+        self.comet_phase = (self.comet_phase + COMET_RATE * k_t * dt) % 1.0
+        self.ripple_phase = (self.ripple_phase + RIPPLE_RATE * k_t * dt) % 1.0
 
         if self.state in (AvatarState.IDLE, AvatarState.LISTENING) and self.blink_t > self.next_blink:
             self.blink_t = 0.0

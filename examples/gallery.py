@@ -34,7 +34,7 @@ _CAPTION = {
     AvatarState.STREAMING: "streaming — text arriving; a bright point laps its edge, fast",
     AvatarState.NOTIFY: "notify — a chirp and an excited little spin; returns by itself",
     AvatarState.SUCCESS: "success — a warm pulse and spin-up; returns by itself",
-    AvatarState.ERROR: "error — seized: rotation frozen, amber, one flinch",
+    AvatarState.ERROR: "error — seized: rotation frozen, flushed red, one flinch",
 }
 _THINKING_CAPTION = {
     "breakup": "thinking (breakup) — comes apart to turn the pieces over, gaze down-right",
