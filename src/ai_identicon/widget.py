@@ -48,6 +48,27 @@ except ImportError:  # portrait preview degrades gracefully
 
 _lerp_rgb = geometry.lerp_rgb
 
+# Every pixel size in this file was authored against an orb of r ≈ 60px. The
+# GEOMETRY scales with r on its own; the INK did not, so a 40px avatar used to
+# get a ring stroke a fifth as wide as the orb's radius and an error flinch that
+# threw it a sixth of the way across its own frame, while a 480px one got
+# hairlines you could barely see. Scaling the authored value keeps the tuned
+# look at the reference size and stays proportional everywhere else.
+#
+# Deliberately NOT scaled: the facet seam in _draw_solid. That hairline exists
+# to close the anti-aliasing gap between adjacent triangles — a rasterization
+# artifact of roughly constant sub-pixel width no matter how big the shape is.
+# Scaling it down would let the seams reopen; scaling it up would fatten every
+# facet edge into an outline the design deliberately avoids.
+_REF_R = 60.0
+
+
+def _ink(px: float, r: float, floor: float = 0.5) -> float:
+    """Scale a stroke width or motion amplitude authored at `_REF_R` to this
+    orb. `floor` keeps strokes visible on tiny embeds; pass 0.0 for motion,
+    which should be free to become imperceptibly small."""
+    return max(floor, px * r / _REF_R)
+
 
 class PresenceWidget(QWidget):
     """Live avatar widget. Construct with a Genome (or an AvatarModel) and an
@@ -305,12 +326,12 @@ class PresenceWidget(QWidget):
         think = m.cur["think_mix"]
         fm = m.cur["face_mix"]
         cx = w / 2.0
-        cy = h / 2.0 + 2.0 * math.sin(m.t * 0.7) * (1.0 - 0.7 * fm)
+        cy = h / 2.0 + _ink(2.0, r, 0.0) * math.sin(m.t * 0.7) * (1.0 - 0.7 * fm)
         if think > 0.05:
             cx += think * r * 0.06 * math.sin(m.t * 0.53 + m.drift_seed)
             cy += think * r * 0.04 * math.sin(m.t * 0.71 + m.drift_seed * 2)
         if m.shake_t < 0.6:
-            cx += 7.0 * math.exp(-m.shake_t * 7.0) * math.sin(m.shake_t * 42.0)
+            cx += _ink(7.0, r, 0.0) * math.exp(-m.shake_t * 7.0) * math.sin(m.shake_t * 42.0)
 
         tint = tuple(int(q) for q in m.cur["tint"])
         tint_mix = m.cur["tint_mix"]
@@ -343,7 +364,7 @@ class PresenceWidget(QWidget):
                 continue
             ring_r = r * (1.1 + 2.3 * prog)
             pen = QPen(QColor(*disp, int(150 * (1.0 - prog) ** 1.5)))
-            pen.setWidthF(1.5 + 2.5 * (1.0 - prog))
+            pen.setWidthF(_ink(1.5 + 2.5 * (1.0 - prog), r))
             p.setBrush(Qt.NoBrush)
             p.setPen(pen)
             p.drawEllipse(QPointF(cx, cy), ring_r, ring_r)
@@ -431,11 +452,11 @@ class PresenceWidget(QWidget):
                 self._draw_speaking_wave(p, cx, cy, ring, r, disp, wave, env, k_t, k_e, g)
             if ripple > 0.02:
                 base_pen = QPen(QColor(*disp, int(45 * ripple)))
-                base_pen.setWidthF(1.2)
+                base_pen.setWidthF(_ink(1.2, r))
                 p.setPen(base_pen)
                 p.setBrush(Qt.NoBrush)
                 p.drawEllipse(QPointF(cx, cy), ring, ring)
-                self._draw_trace_activity(p, cx, cy, ring, disp, ripple, k_t)
+                self._draw_trace_activity(p, cx, cy, ring, r, disp, ripple, k_t)
             if comet > 0.02:
                 self._draw_stream_comet(p, cx, cy, ring, r, disp, comet, k_t)
             p.setPen(Qt.NoPen)
@@ -478,12 +499,12 @@ class PresenceWidget(QWidget):
                     rr = ring
             pts.append(QPointF(cx + rr * math.cos(th), cy + rr * math.sin(th)))
         pen = QPen(QColor(*disp, int((45 + 130 * min(1.0, loud * 1.3)) * trace)))
-        pen.setWidthF(1.1 + 0.6 * loud)
+        pen.setWidthF(_ink(1.1 + 0.6 * loud, r))
         p.setPen(pen)
         p.setBrush(Qt.NoBrush)
         p.drawPolyline(pts + [pts[0]])
 
-    def _draw_trace_activity(self, p, cx, cy, ring, disp, trace, k_t):
+    def _draw_trace_activity(self, p, cx, cy, ring, r, disp, trace, k_t):
         """Listening: gentle rings drifting INWARD — arriving sound, subtle."""
         m = self.model
         p.setBrush(Qt.NoBrush)
@@ -491,7 +512,7 @@ class PresenceWidget(QWidget):
             prog = (m.ripple_phase + j / 2.0) % 1.0
             rr = ring * (1.18 - 0.20 * prog)
             pen = QPen(QColor(*disp, int(55 * math.sin(math.pi * prog) * trace)))
-            pen.setWidthF(1.3)
+            pen.setWidthF(_ink(1.3, r))
             p.setPen(pen)
             p.drawEllipse(QPointF(cx, cy), rr, rr)
 
@@ -569,7 +590,7 @@ class PresenceWidget(QWidget):
             # authored against r ≈ 60px, so without `u` they stay fixed-size and
             # swamp a small avatar — at 40px the twinkles were bigger than the
             # shards. Floors keep strokes from disappearing entirely when tiny.
-            u = r / 60.0
+            u = r / _REF_R
 
             prev = None
             n_trail = 18

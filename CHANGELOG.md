@@ -25,10 +25,16 @@ package release never changes an existing seed's avatar.
   `KeyError`.
 - **State stills are generated**, not hand-captured
   (`scripts/render_state_stills.py`); all eight are regenerated.
-- **The `orbiter` thinking sparkles now scale with the avatar.** Their core,
-  rays, twinkles and trail were absolute pixel sizes, so on a small embed they
-  stayed put while everything else shrank — at a 40px avatar the sparkle core
-  was larger than the shards. They are now proportional to the orb.
+- **The avatar now scales properly at any embed size.** Its geometry always
+  did, but the *ink* did not: stroke weights and motion amplitudes were
+  absolute pixels, so they held still while everything around them shrank. At
+  a 40px avatar the listening ring was a fifth as wide as the orb's radius
+  (with the two ripples merged into one band), the `orbiter` sparkle core was
+  larger than the shards it circled, and the error flinch threw the orb a sixth
+  of the way across its own frame; at 480px the same strokes were hairlines you
+  could barely see. Every stroke and motion is now proportional to the orb.
+  The one deliberate exception is the facet seam, which closes an
+  anti-aliasing gap of roughly constant width and must not scale.
 - **Mark phase is integrated in the model**, not derived from absolute time in
   the renderer (`COMET_RATE` / `RIPPLE_RATE`). `phase = t * rate` jumps the
   moment a rate changes, because the new rate applies retroactively to all
