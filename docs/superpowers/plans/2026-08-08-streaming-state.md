@@ -17,6 +17,15 @@ phases; this plan splits them into seven commits for reviewability. Spec
 (the state) = Tasks 4–7. The phase boundary is the only ordering that matters:
 no task from 4–7 may land before Task 3 is green.
 
+**On the "sync the plan" commits.** Three findings during execution were ruled
+to govern over this plan's text, and the plan was amended to match what
+shipped: transient-aware sample times in the hash harness, the AST guard
+replacing a regex, and `SAMPLE_AT[ERROR]` `0.22`→`0.10`. Those amendments
+record **intent**, not a byte-exact transcript — the shipped code differs in
+comment wording and minor structure. Read the plan for what was decided and
+why; read `git log` for exactly what landed. Where the two disagree, the code
+is authoritative.
+
 ## Global Constraints
 
 - **Python ≥3.10.** No new runtime dependencies. The core (`genome`, `geometry`, `model`, `portrait`, `controller`) must stay dependency-free.
@@ -711,6 +720,23 @@ def test_streaming_comet_draws_at_every_embed_size(size):
     # on screen that idle does not — a render that merely completes is not enough
     assert _frame(AvatarState.STREAMING, size=size) != _frame(AvatarState.IDLE, size=size)
 ```
+
+> **⚠️ BOTH TESTS ABOVE WERE SUPERSEDED DURING EXECUTION — do not copy them.**
+> Whole-frame comparison does not isolate the comet, and both were proven by
+> mutation to pass with `_draw_stream_comet` stubbed to a no-op:
+> * `test_streaming_comet_moves` — ambient motion (the idle bob at
+>   `widget.py:307` keeps 30% amplitude even at `face_mix=1.0`, plus shard
+>   drift) makes *any* two time-separated frames differ. Step 2's stated
+>   expectation below ("Expected: FAIL … the two samples are identical") is
+>   therefore wrong. Rewritten in `bbd4837` to locate the peak-brightness
+>   angle on the ring and assert it advances, gated by a luminance floor.
+> * `test_streaming_comet_draws_at_every_embed_size` — `STREAMING` differs
+>   from `IDLE` by `tint_mix`/`glow`/`spin` regardless of any ring mark.
+>   Rewritten in `c9d6382` to assert peak ring luminance clears the floor.
+>
+> The lesson generalises: **a test for a visual mark must measure that mark,
+> not the frame containing it** — and the only way to know is to delete the
+> feature and watch the test fail.
 
 - [ ] **Step 2: Run it to verify it fails**
 
