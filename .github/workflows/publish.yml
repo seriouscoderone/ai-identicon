@@ -1,0 +1,74 @@
+name: Publish to PyPI
+
+# Fires when a GitHub Release is published (not merely a tag push), so
+# creating the release IS the act of publishing.
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Versions must agree with the tag
+        # This repo carries the version in TWO files, and the release adds a
+        # third source of truth in the tag. PyPI will not let a version be
+        # re-uploaded or overwritten, so a mismatch caught here is cheap and
+        # the same mismatch caught after upload is permanent.
+        run: |
+          python - <<'EOF'
+          import os, re, pathlib, sys
+          tag = os.environ["TAG"].lstrip("v")
+          pyproject = re.search(r'^version = "([^"]+)"',
+                                pathlib.Path("pyproject.toml").read_text(),
+                                re.M).group(1)
+          init = re.search(r'^__version__ = "([^"]+)"',
+                           pathlib.Path("src/ai_identicon/__init__.py").read_text(),
+                           re.M).group(1)
+          print(f"tag={tag} pyproject={pyproject} __init__={init}")
+          if not tag == pyproject == init:
+              sys.exit(f"version mismatch: tag={tag} pyproject={pyproject} __init__={init}")
+          EOF
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+
+      - name: Install and test (Qt-free, as CI does)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+          pytest -q
+
+      - name: Build sdist and wheel
+        run: |
+          pip install --upgrade build twine
+          python -m build
+          twine check dist/*
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    # The `pypi` environment is what PyPI's trusted publisher is pinned to.
+    environment:
+      name: pypi
+      url: https://pypi.org/p/ai-identicon
+    permissions:
+      # Lets the job mint a short-lived OIDC token that PyPI verifies. This is
+      # the whole point of trusted publishing: no API token is ever stored in
+      # this repo, so there is nothing here to leak or rotate.
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
