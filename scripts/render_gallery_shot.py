@@ -8,11 +8,17 @@ can be refreshed whenever the UI changes.
 Deliberately NOT run under QT_QPA_PLATFORM=offscreen, unlike the other render
 scripts here: the offscreen backend substitutes fonts (it has no "Sans Serif"),
 so labels and buttons would not look like what a user actually sees. That means
-this briefly flashes a real window on screen while it grabs — the cost of the
+this briefly shows a real window on screen while it captures — the cost of the
 shot being honest.
 
-It captures the widget's own content, so there is no window title bar or drop
-shadow. If you want the macOS chrome, take the screenshot by hand instead.
+On macOS it tries to capture the real window through `screencapture`, so the
+shot can keep the title bar and drop shadow that make it read as a running app
+rather than a mockup. That needs Screen Recording permission for whatever runs
+this, and macOS does not prompt for command-line tools — the terminal or IDE
+has to be added by hand under System Settings > Privacy & Security > Screen
+Recording, then restarted. Without it the capture is refused outright ("could
+not create image from window") and this falls back to a chrome-less
+`QWidget.grab()`, saying so rather than failing quietly.
 
 Needs the Qt extra:  pip install -e ".[qt]"
 Run from the repo root:  python scripts/render_gallery_shot.py
@@ -21,9 +27,11 @@ Run from the repo root:  python scripts/render_gallery_shot.py
 from __future__ import annotations
 
 import os
+import subprocess
 import sys
 import time
 
+from PIL import Image
 from PySide6.QtWidgets import QApplication
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
@@ -33,7 +41,42 @@ from ai_identicon.model import AvatarState     # noqa: E402
 SEED = "bmev5p5akc"
 WINDOW = (980, 660)    # a floor; the genome panel makes the real window taller
 ORB_PX = 480           # fill the left column — the 360 default leaves it empty
+ORB_ZOOM = 1.30        # the orb only draws at r = px * 0.13, so most of its box
+                       # is reserved for glow and rings; zoom fills the frame,
+                       # the same knob the README loops use
 SETTLE_SECONDS = 2.0   # let the cluster settle and the orb reach a good pose
+
+
+def _window_id(title: str) -> int | None:
+    """The CGWindowID of our own on-screen window, or None."""
+    try:
+        import Quartz
+    except ImportError:
+        return None
+    mine = os.getpid()
+    for w in Quartz.CGWindowListCopyWindowInfo(
+            Quartz.kCGWindowListOptionOnScreenOnly, Quartz.kCGNullWindowID):
+        if w.get("kCGWindowOwnerPID") == mine and w.get("kCGWindowName") == title:
+            return w["kCGWindowNumber"]
+    return None
+
+
+def _capture_with_chrome(win_id: int, out: str) -> str | None:
+    """screencapture the window itself. Returns None on success, else why not.
+
+    Denial here is a permission problem, not a bug: macOS refuses window
+    content to anything lacking Screen Recording, and it does not prompt for
+    command-line tools — the terminal (or IDE) running this has to be added by
+    hand under System Settings > Privacy & Security > Screen Recording, and
+    then restarted.
+    """
+    p = subprocess.run(["screencapture", "-x", f"-l{win_id}", out],
+                       capture_output=True)
+    if p.returncode != 0:
+        return (p.stderr.decode().strip() or f"screencapture exited {p.returncode}")
+    if not os.path.exists(out):
+        return "screencapture wrote nothing"
+    return None
 
 
 def main() -> int:
@@ -41,7 +84,10 @@ def main() -> int:
     demo = Demo(SEED)
     demo.resize(*WINDOW)
     demo.size_slider.setValue(ORB_PX)
+    demo.orb.zoom = ORB_ZOOM
     demo.show()
+    demo.raise_()
+    demo.activateWindow()
     # the seed box takes focus on open and its caret blinks into the shot
     demo.seed_edit.clearFocus()
 
@@ -55,10 +101,22 @@ def main() -> int:
         time.sleep(0.01)
 
     out = os.path.join(os.path.dirname(__file__), "..", "docs", "gallery.png")
-    shot = demo.grab()
-    shot.save(out, "PNG")
-    print(f"  {os.path.relpath(out)}  {shot.width()}x{shot.height()}  "
-          f"{os.path.getsize(out) // 1024} KB")
+
+    win_id = _window_id(demo.windowTitle()) if sys.platform == "darwin" else None
+    why = "not macOS" if win_id is None else _capture_with_chrome(win_id, out)
+    if why is None:
+        how = "real window via screencapture (title bar + shadow)"
+    else:
+        how = "chrome-less QWidget.grab()"
+        demo.grab().save(out, "PNG")
+        print(f"  note: window capture unavailable — {why}\n"
+              "        (grant Screen Recording to the terminal running this,"
+              " then restart it)")
+
+    with Image.open(out) as im:
+        dims = im.size
+    print(f"  {os.path.relpath(out)}  {dims[0]}x{dims[1]}  "
+          f"{os.path.getsize(out) // 1024} KB  — {how}")
     return 0
 
 
