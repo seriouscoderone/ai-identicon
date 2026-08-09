@@ -5,6 +5,19 @@ to [Semantic Versioning](https://semver.org). The package version is
 independent of `ALGO_VERSION` (the frozen avatar-generation contract): a
 package release never changes an existing seed's avatar.
 
+## [0.8.2] — 2026-08-09
+
+- **The orb is bigger by default** — `PresenceWidget.zoom` goes from `1.0` to
+  `1.10`. Most of the widget's frame is reserved for marks only some states
+  draw (the listening ring sits at hull + `0.30r`, and the streaming comet
+  rides it), so at idle that reservation just reads as emptiness.
+
+  `1.10` is not a taste call: measured across 90 ordinary seeds it clips
+  nothing, while `1.15` and `1.20` clip 1% and `1.25`+ clips badly. Against the
+  widest-hull 4% of seeds, `1.10` costs 4 cases in 120 and `1.20` costs 13. A
+  clipped ring on someone's avatar is a worse bug than a slightly small orb, so
+  the value sits at the last measurement that was clean.
+
 ## [0.8.1] — 2026-08-09
 
 - **The gallery ships with the package**, as the `ai-identicon-gallery`

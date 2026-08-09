@@ -80,7 +80,17 @@ class PresenceWidget(QWidget):
         self.model = (genome_or_model if isinstance(genome_or_model, AvatarModel)
                       else AvatarModel(genome_or_model))
         self._sounds = sounds
-        self.zoom = 1.0           # orb size within the frame (1.0 = default)
+        # Orb size within its frame. Most of the frame is reserved for marks
+        # that only some states draw — the listening ring sits at hull + 0.30r
+        # and the streaming comet rides it — so at idle the reserved space
+        # reads as emptiness. 1.10 reclaims some of it.
+        #
+        # It cannot go much further: measured across 90 ordinary seeds, 1.10
+        # clips nothing, 1.15 and 1.20 clip 1%, and 1.25+ clips badly. Against
+        # the widest-hull 4% of seeds, 1.10 costs 4 cases in 120 and 1.20 costs
+        # 13. Raise this only with that measurement redone — a clipped ring on
+        # someone's avatar is a worse bug than a slightly small orb.
+        self.zoom = 1.10
         self._ring_r = 0.0        # smoothed radius shared by all three ring marks
         self._preview: str | None = None
         self._preview_renderers: list = []

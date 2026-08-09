@@ -41,10 +41,13 @@ from ai_identicon.model import AvatarState     # noqa: E402
 SEED = "bmev5p5akc"
 WINDOW = (980, 660)    # a floor; the genome panel makes the real window taller
 ORB_PX = 480           # fill the left column — the 360 default leaves it empty
-ORB_ZOOM = 1.30        # the orb only draws at r = px * 0.13, so most of its box
-                       # is reserved for glow and rings; zoom fills the frame,
-                       # the same knob the README loops use
 SETTLE_SECONDS = 2.0   # let the cluster settle and the orb reach a good pose
+
+# NB: zoom is deliberately left at the widget's own default. An earlier version
+# of this script set 1.30 to fill the frame, which made the README shot flatter
+# the app — nobody running it would see that. The default itself was raised
+# instead, to the largest value measured not to clip any ordinary avatar's
+# listening ring.
 
 
 def _window_id(title: str) -> int | None:
@@ -84,7 +87,6 @@ def main() -> int:
     demo = Demo(SEED)
     demo.resize(*WINDOW)
     demo.size_slider.setValue(ORB_PX)
-    demo.orb.zoom = ORB_ZOOM
     demo.show()
     demo.raise_()
     demo.activateWindow()
