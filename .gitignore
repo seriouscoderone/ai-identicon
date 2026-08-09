@@ -11,3 +11,6 @@ venv/
 examples/avatars/
 *.swp
 .DS_Store
+
+# generated fallback when window capture is unavailable — never committed
+docs/gallery-nochrome.png

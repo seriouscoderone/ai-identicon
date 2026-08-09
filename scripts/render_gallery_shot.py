@@ -109,7 +109,15 @@ def main() -> int:
     if why is None:
         how = "real window via screencapture (title bar + shadow)"
     else:
+        # Do NOT clobber an existing shot with the chrome-less fallback. The
+        # committed docs/gallery.png may be a hand-captured window complete
+        # with title bar and shadow; quietly replacing it with a flat
+        # rectangle because a permission is missing would be a downgrade
+        # nobody asked for and nobody would notice until review.
         how = "chrome-less QWidget.grab()"
+        if os.path.exists(out):
+            out = out.replace(".png", "-nochrome.png")
+            how += " — WROTE ELSEWHERE, existing shot left untouched"
         demo.grab().save(out, "PNG")
         print(f"  note: window capture unavailable — {why}\n"
               "        (grant Screen Recording to the terminal running this,"
