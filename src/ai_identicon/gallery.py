@@ -2,11 +2,17 @@
 """Interactive gallery for ai-identicon — built entirely on the public API
 (genome / model / widget / portrait / audio).
 
-    pip install -e .[qt]
-    python examples/gallery.py
+    pip install "ai-identicon[qt]"
+    ai-identicon-gallery              # or: python -m ai_identicon.gallery
 
 Type a seed (or hit 🎲), watch the states, tweak the genome sliders, and save
 SVG portraits. Everything you see is derived from the seed + your overrides.
+
+This ships inside the package rather than sitting in an examples/ directory
+so that `pip install` alone is enough to see the thing move — an examples
+folder is not installed by pip, so it only ever existed for people who
+cloned the repo. It stays strictly a CONSUMER of the public API: nothing in
+the library imports it, and `import ai_identicon` never pulls in Qt.
 """
 
 from __future__ import annotations

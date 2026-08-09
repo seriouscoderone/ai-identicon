@@ -5,6 +5,24 @@ to [Semantic Versioning](https://semver.org). The package version is
 independent of `ALGO_VERSION` (the frozen avatar-generation contract): a
 package release never changes an existing seed's avatar.
 
+## [0.8.1] — 2026-08-09
+
+- **The gallery ships with the package**, as the `ai-identicon-gallery`
+  command. It used to live in `examples/`, which pip does not install — so
+  the one thing that shows what this library actually *does* was invisible to
+  anyone who installed it the normal way, and only ever worked from a clone.
+
+  ```bash
+  pip install "ai-identicon[qt]"
+  ai-identicon-gallery
+  ```
+
+  Or, without installing anything: `pipx run --spec "ai-identicon[qt]"
+  ai-identicon-gallery`. Running without the `qt` extra now prints how to get
+  it instead of a `ModuleNotFoundError` naming a package you never asked for.
+  `import ai_identicon` is still Qt-free — nothing in the library imports the
+  gallery; it remains a consumer of the public API.
+
 ## [0.8.0] — 2026-08-08
 
 - **⚠️ `"streaming"` now means text, not voice.** The published lifecycle event

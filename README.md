@@ -99,8 +99,16 @@ ctl = AvatarController(orb)       # map your assistant's lifecycle to states
 ctl.thinking(); ctl.speaking(); ctl.on_audio(amplitude=level)
 ```
 
-Run the interactive gallery: `python examples/gallery.py` (its **copy 📋**
-button puts the avatar on the clipboard to paste into chats/notes).
+Run the interactive gallery — installed as a command, no clone needed:
+
+```bash
+pip install "ai-identicon[qt]"
+ai-identicon-gallery              # optionally: ai-identicon-gallery <seed>
+```
+
+Or try it without installing anything: `pipx run --spec "ai-identicon[qt]"
+ai-identicon-gallery`. Its **copy 📋** button puts the avatar on the clipboard
+to paste into chats/notes.
 
 ## Copy to clipboard (Qt)
 

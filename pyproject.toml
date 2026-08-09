@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ai-identicon"
-version = "0.8.0"
+version = "0.8.1"
 description = "Generative, animated avatars for AI agents — deterministic from a seed."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -24,6 +24,11 @@ dependencies = []  # the core (genome/geometry/model/portrait/controller) is dep
 [project.optional-dependencies]
 qt = ["PySide6>=6.5"]          # the live widget + audio (audio also needs QtMultimedia)
 test = ["pytest>=7"]
+
+[project.scripts]
+# Needs the `qt` extra; the entry point turns a missing PySide6 into a
+# sentence rather than a traceback. See _cli.py.
+ai-identicon-gallery = "ai_identicon._cli:gallery"
 
 [project.urls]
 Homepage = "https://github.com/seriouscoderone/ai-identicon"

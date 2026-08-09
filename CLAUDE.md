@@ -13,7 +13,8 @@ pytest tests/test_model.py -q                # one file
 pytest tests/test_model.py::test_starts_idle -q
 pytest -k "brand or material" -q
 
-python examples/gallery.py                   # interactive Qt gallery (seed box, state buttons, genome sliders)
+ai-identicon-gallery                         # interactive Qt gallery (seed box, state buttons, genome sliders)
+python -m ai_identicon.gallery               # same thing, without relying on the console script
 python scripts/render_readme_loops.py        # regenerate docs/hero.webp + docs/faces/*.webp (needs qt + pillow)
 ```
 

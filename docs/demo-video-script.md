@@ -8,7 +8,8 @@ Format per beat: **[SCREEN]** what's visible · **[DO]** what to click ·
 **[VO]** what to say.
 
 Recording setup:
-- Run `python examples/gallery.py`. Window ~980×660; put it on a dark desktop.
+- Run `ai-identicon-gallery` (or `python -m ai_identicon.gallery` from a
+  clone). Window ~980×660; put it on a dark desktop.
 - Have the gallery at the default seed to start (a violet 2‑shard crystal).
 - Record at 1080p; the orb animates at 60fps, so use a screen recorder that
   captures smooth motion. Move the mouse deliberately and pause on each state
