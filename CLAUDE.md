@@ -43,11 +43,20 @@ controller.py  adapter    — assistant-lifecycle event names → AvatarState
 widget.py      live       — QWidget renderer                             ) Qt extra:
 audio.py       sound      — synthesized cues + live-mic spectrum         ) PySide6 imports
 clipboard.py   paste      — rasterize to PNG for the system clipboard    ) live ONLY here
+gallery.py     demo       — the interactive gallery, shipped as a command)
+_cli.py        entry      — console-script entry; turns a missing PySide6 into a sentence
 ```
 
 **The Qt boundary is load-bearing.** `genome`/`geometry`/`model`/`portrait`/`controller` must never
-import PySide6 — that is what keeps the package dependency-free and the suite headless. Qt tests
-guard with `pytest.importorskip("PySide6")` and `QT_QPA_PLATFORM=offscreen`.
+import PySide6 — that is what keeps the package dependency-free and the suite headless. Exactly four
+modules import Qt: `widget`, `audio`, `clipboard`, `gallery`. Qt tests guard with
+`pytest.importorskip("PySide6")` and `QT_QPA_PLATFORM=offscreen`.
+
+`gallery.py` lives in the package (not an `examples/` directory, which pip never installs) so that
+`pip install "ai-identicon[qt]"` alone is enough to run `ai-identicon-gallery`. It is strictly a
+**consumer** of the public API — nothing in the library imports it, and `import ai_identicon` stays
+Qt-free. `_cli.py` exists solely so a missing PySide6 becomes a sentence rather than a traceback;
+the gallery's Qt import cannot be deferred into a function because its widgets subclass Qt classes.
 
 **The widget owns pixels, never behavior.** Anything time-driven (transitions, tumble, gaze,
 blink/saccade scheduling, transient auto-return, physics) belongs in `AvatarModel`; `widget.py`

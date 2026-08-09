@@ -68,7 +68,39 @@ settle back to idle on their own.</sub>
 
 ```bash
 pip install ai-identicon          # core: genomes + SVG portraits (no deps)
-pip install "ai-identicon[qt]"    # + the live animated widget and audio
+pip install "ai-identicon[qt]"    # + the live animated widget, audio, and gallery
+```
+
+Both lines install the **same package** — `[qt]` is not a different build, it
+asks pip to bring along an optional dependency group. The library code is
+identical either way; the only difference is whether PySide6 comes with it.
+
+|                          | core | `[qt]` |
+| ------------------------ | :--: | :----: |
+| Genomes, deterministic from a seed | ✅ | ✅ |
+| SVG portraits (color + line-art)   | ✅ | ✅ |
+| Headless state model / controller  | ✅ | ✅ |
+| Live animated widget, mic + sounds | —  | ✅ |
+| Copy-to-clipboard, `ai-identicon-gallery` | — | ✅ |
+
+The split is worth it because of the size: the library is ~500 KB and PySide6
+is ~1.1 GB. Generating avatars on a server has no business downloading a
+desktop GUI toolkit, so the core declares **no dependencies at all** — every
+requirement is conditional on an extra. Qt is imported by exactly four
+modules — `widget`, `audio`, `clipboard` and `gallery` — never by the core,
+and the test suite runs without it, which is what keeps that promise honest
+rather than aspirational.
+
+Extras are additive: install the core now, and `pip install "ai-identicon[qt]"`
+later just adds PySide6 alongside — nothing is reinstalled or swapped.
+
+> **Quote the brackets.** In zsh and bash `[` and `]` are glob characters, so
+> an unquoted `pip install ai-identicon[qt]` can fail with `no matches found`.
+
+Python 3.10+. To see it move without installing anything at all:
+
+```bash
+pipx run --spec "ai-identicon[qt]" ai-identicon-gallery
 ```
 
 ## Static portraits (pure, no Qt)
