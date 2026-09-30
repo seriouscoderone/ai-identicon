@@ -5,7 +5,8 @@ identity grown from a seed string. Instead of a photoreal face (creepy) or a
 cartoon mascot (cheesy), each agent gets an irregular faceted **presence**: a
 "broken-whole" cluster of crystalline shards that reads as an object with
 character, and can come alive — listening, thinking, speaking — without ever
-pretending to be human.
+pretending to be human. Facebook's Muse and OpenAI's Dot also have their own look. 
+This is a visual alternative for your AI Agents. 
 
 Same seed → same avatar, **forever**, under a given generation version.
 
